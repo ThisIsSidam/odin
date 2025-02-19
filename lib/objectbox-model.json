@@ -1,0 +1,121 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:1549428912930375963",
+      "lastPropertyId": "5:3131530535168273112",
+      "name": "ActivityLog",
+      "properties": [
+        {
+          "id": "1:5738672366785243651",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6239032737013424339",
+          "name": "startedAt",
+          "type": 10
+        },
+        {
+          "id": "3:8652174101495784327",
+          "name": "stoppedAt",
+          "type": 10
+        },
+        {
+          "id": "4:844667196218396284",
+          "name": "activityId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "1:1531234922903020296",
+          "relationTarget": "ActivityModel"
+        },
+        {
+          "id": "5:3131530535168273112",
+          "name": "note",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:3155145816797034041",
+      "lastPropertyId": "5:3117585597728973931",
+      "name": "ActivityModel",
+      "properties": [
+        {
+          "id": "1:7384044259464631515",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1821823295340015229",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:3619620898671628666",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "4:8823124651568481354",
+          "name": "importanceLevel",
+          "type": 6
+        },
+        {
+          "id": "5:3117585597728973931",
+          "name": "colorHex",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:8551616610262305858",
+      "lastPropertyId": "4:3312446299992874747",
+      "name": "LiveActivity",
+      "properties": [
+        {
+          "id": "1:7229150308726790425",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5181701917948852662",
+          "name": "startedAt",
+          "type": 10
+        },
+        {
+          "id": "3:1620651448368849156",
+          "name": "activityId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "2:8513429944087435080",
+          "relationTarget": "ActivityModel"
+        },
+        {
+          "id": "4:3312446299992874747",
+          "name": "note",
+          "type": 9
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "3:8551616610262305858",
+  "lastIndexId": "2:8513429944087435080",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}
