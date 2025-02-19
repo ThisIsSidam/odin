@@ -12,14 +12,14 @@ class OngoingActivitiesSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    const AsyncValue<List<LiveActivity>> ongoingActivities =
-        AsyncValue<List<LiveActivity>>.data(<LiveActivity>[]);
+    const AsyncValue<List<LiveActivityEntity>> ongoingActivities =
+        AsyncValue<List<LiveActivityEntity>>.data(<LiveActivityEntity>[]);
     // ref.watch(ongoingNotifierProvider);
     final Size size = MediaQuery.sizeOf(context);
 
-    return AsyncValueWidget<List<LiveActivity>>(
+    return AsyncValueWidget<List<LiveActivityEntity>>(
       value: ongoingActivities,
-      data: (List<LiveActivity> activities) {
+      data: (List<LiveActivityEntity> activities) {
         if (activities.isEmpty) {
           return const Align(
             alignment: Alignment.topCenter,

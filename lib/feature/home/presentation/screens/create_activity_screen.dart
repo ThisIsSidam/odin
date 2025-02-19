@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 // import '../../../../core/extensions/color_ext.dart';
-import '../../../../core/models/activity_models.dart';
+import '../../../../core/data/entities/activity_models.dart';
 
 class CreateActivityScreen extends HookConsumerWidget {
   const CreateActivityScreen({super.key});
@@ -78,7 +78,7 @@ class CreateActivityScreen extends HookConsumerWidget {
     );
   }
 
-  Widget buildColorPicker(ActivityModel? activity, FormGroup form) {
+  Widget buildColorPicker(ActivityEntity? activity, FormGroup form) {
     return HookBuilder(
       builder: (BuildContext context) {
         final TextEditingController colorController = useTextEditingController(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/models/activity_models.dart';
+import '../../../../core/data/entities/activity_models.dart';
 import '../../data/models/ongoing_model.dart';
 
 class LiveActivityCard extends ConsumerWidget {
@@ -10,14 +10,14 @@ class LiveActivityCard extends ConsumerWidget {
     super.key,
   });
 
-  final LiveActivity ongoing;
+  final LiveActivityEntity ongoing;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return _buildCard(context, ongoing.activity.target);
   }
 
-  Card _buildCard(BuildContext context, ActivityModel? activity) {
+  Card _buildCard(BuildContext context, ActivityEntity? activity) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),

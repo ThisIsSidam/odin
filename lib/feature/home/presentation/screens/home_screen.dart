@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../../core/models/activity_models.dart';
+import '../../../../core/data/entities/activity_models.dart';
 import '../../../../router/app_routes.dart';
 import '../../../../shared/riverpod_widgets/async_widget.dart';
 import '../../data/models/ongoing_model.dart';
@@ -37,24 +37,24 @@ class HomeActivityDock extends ConsumerWidget {
   const HomeActivityDock({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    const AsyncValue<List<ActivityModel>> activities =
-        AsyncValue<List<ActivityModel>>.data(<ActivityModel>[]);
+    const AsyncValue<List<ActivityEntity>> activities =
+        AsyncValue<List<ActivityEntity>>.data(<ActivityEntity>[]);
     // ref.watch(activityNotifierProvider);
-    const AsyncValue<List<LiveActivity>> ongoingActivities =
-        AsyncValue<List<LiveActivity>>.data(<LiveActivity>[]);
+    const AsyncValue<List<LiveActivityEntity>> ongoingActivities =
+        AsyncValue<List<LiveActivityEntity>>.data(<LiveActivityEntity>[]);
     // ref.watch(ongoingNotifierProvider);
 
     final Size size = MediaQuery.sizeOf(context);
-    return AsyncValueWidget<List<ActivityModel>>(
+    return AsyncValueWidget<List<ActivityEntity>>(
       value: activities,
       loading: const Center(child: CircularProgressIndicator()),
       error: (Object e, _) => Text(e.toString()),
-      data: (List<ActivityModel> activities) =>
-          AsyncValueWidget<List<LiveActivity>>(
+      data: (List<ActivityEntity> activities) =>
+          AsyncValueWidget<List<LiveActivityEntity>>(
         value: ongoingActivities,
         loading: const Center(child: CircularProgressIndicator()),
         error: (Object e, _) => Text(e.toString()),
-        data: (List<LiveActivity> ongoing) => AnimatedContainer(
+        data: (List<LiveActivityEntity> ongoing) => AnimatedContainer(
           width: double.infinity,
           padding: const EdgeInsets.all(8),
           duration: const Duration(milliseconds: 300),
@@ -79,7 +79,7 @@ class HomeActivityDock extends ConsumerWidget {
   Widget _buildActivityChips(
     BuildContext context,
     WidgetRef ref,
-    List<ActivityModel> activities,
+    List<ActivityEntity> activities,
   ) {
     return Wrap(
       spacing: 8,
@@ -92,7 +92,7 @@ class HomeActivityDock extends ConsumerWidget {
           },
         ),
         ...activities.map(
-          (ActivityModel activity) => ActionChip(
+          (ActivityEntity activity) => ActionChip(
             label: Text(activity.name),
             backgroundColor: activity.colorHex?.toColor(),
             onPressed: () {
