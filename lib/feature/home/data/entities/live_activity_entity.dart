@@ -1,6 +1,6 @@
 import 'package:objectbox/objectbox.dart';
 
-import '../../../../core/data/entities/activity_models.dart';
+import '../../../../core/data/entities/activity_entities.dart';
 
 @Entity()
 class LiveActivityEntity {

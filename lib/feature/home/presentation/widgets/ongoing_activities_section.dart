@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../shared/riverpod_widgets/async_widget.dart';
-import '../../data/models/ongoing_model.dart';
+import '../../data/entities/live_activity_entity.dart';
 import 'ongoing_activity_card.dart';
 
 class OngoingActivitiesSection extends ConsumerWidget {

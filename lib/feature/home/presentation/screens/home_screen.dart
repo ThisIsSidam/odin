@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../../core/data/entities/activity_models.dart';
+import '../../../../core/data/entities/activity_entities.dart';
 import '../../../../router/app_routes.dart';
 import '../../../../shared/riverpod_widgets/async_widget.dart';
-import '../../data/models/ongoing_model.dart';
+import '../../data/entities/live_activity_entity.dart';
 import '../widgets/ongoing_activities_section.dart';
 
 class HomeScreen extends ConsumerWidget {

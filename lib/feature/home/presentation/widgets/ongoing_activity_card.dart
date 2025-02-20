@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/data/entities/activity_models.dart';
-import '../../data/models/ongoing_model.dart';
+import '../../../../core/data/entities/activity_entities.dart';
+import '../../data/entities/live_activity_entity.dart';
 
 class LiveActivityCard extends ConsumerWidget {
   const LiveActivityCard({

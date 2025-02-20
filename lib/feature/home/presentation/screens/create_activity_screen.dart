@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 // import '../../../../core/extensions/color_ext.dart';
-import '../../../../core/data/entities/activity_models.dart';
+import '../../../../core/data/entities/activity_entities.dart';
 
 class CreateActivityScreen extends HookConsumerWidget {
   const CreateActivityScreen({super.key});
