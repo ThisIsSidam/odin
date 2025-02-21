@@ -5,7 +5,7 @@ class ActivityEntity {
   @Id()
   int id;
   String name;
-  String description;
+  String? description;
   int importanceLevel;
   String? colorHex;
 
