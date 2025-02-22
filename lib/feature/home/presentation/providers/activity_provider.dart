@@ -13,7 +13,22 @@ class ActivityNotifier extends _$ActivityNotifier {
   List<ActivityEntity> build() {
     final Store store = ref.watch(objectboxStoreProvider);
     _box = store.box<ActivityEntity>();
+    _startListener();
     return _box.query().build().find();
+  }
+
+  void _startListener() {
+    _box
+        .query()
+        .watch(triggerImmediately: true)
+        .map(
+          (Query<ActivityEntity> query) => query.find(),
+        )
+        .listen(
+      (List<ActivityEntity> list) {
+        state = list;
+      },
+    );
   }
 
   void createActivity(ActivityEntity activity) {
