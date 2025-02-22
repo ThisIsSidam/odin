@@ -8,7 +8,7 @@ class LiveActivityEntity {
   int id;
   @Property(type: PropertyType.date)
   DateTime startedAt;
-  ToOne<ActivityEntity?> activity = ToOne<ActivityEntity?>();
+  ToOne<ActivityEntity> activity = ToOne<ActivityEntity>();
   String? note;
 
   LiveActivityEntity({

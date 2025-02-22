@@ -6,9 +6,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/data/entities/activity_entities.dart';
 import '../../../../router/app_routes.dart';
-import '../../../../shared/riverpod_widgets/async_widget.dart';
 import '../../data/entities/live_activity_entity.dart';
 import '../providers/activity_provider.dart';
+import '../providers/live_activity_provider.dart';
 import '../widgets/ongoing_activities_section.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -25,7 +25,7 @@ class HomeScreen extends ConsumerWidget {
       body: const OngoingActivitiesSection(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // ref.read(ongoingNotifierProvider.notifier).addActivity(null);
+          ref.read(liveActivityNotifierProvider.notifier).startActivity(null);
         },
         child: const Icon(Icons.add, size: 32),
       ),
@@ -39,33 +39,27 @@ class HomeActivityDock extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final List<ActivityEntity> activities = ref.watch(activityNotifierProvider);
-    const AsyncValue<List<LiveActivityEntity>> ongoingActivities =
-        AsyncValue<List<LiveActivityEntity>>.data(<LiveActivityEntity>[]);
-    // ref.watch(ongoingNotifierProvider);
+    final List<LiveActivityEntity> liveActivities =
+        ref.watch(liveActivityNotifierProvider);
 
     final Size size = MediaQuery.sizeOf(context);
-    return AsyncValueWidget<List<LiveActivityEntity>>(
-      value: ongoingActivities,
-      loading: const Center(child: CircularProgressIndicator()),
-      error: (Object e, _) => Text(e.toString()),
-      data: (List<LiveActivityEntity> ongoing) => AnimatedContainer(
-        width: double.infinity,
-        padding: const EdgeInsets.all(8),
-        duration: const Duration(milliseconds: 300),
-        height: max(size.height * 0.5 - (ongoing.length * 50), 300),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondaryContainer,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-          boxShadow: const <BoxShadow>[
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 10,
-              spreadRadius: 2,
-            ),
-          ],
-        ),
-        child: _buildActivityChips(context, ref, activities),
+    return AnimatedContainer(
+      width: double.infinity,
+      padding: const EdgeInsets.all(8),
+      duration: const Duration(milliseconds: 300),
+      height: max(size.height * 0.5 - (liveActivities.length * 50), 300),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.secondaryContainer,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        boxShadow: const <BoxShadow>[
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 10,
+            spreadRadius: 2,
+          ),
+        ],
       ),
+      child: _buildActivityChips(context, ref, activities),
     );
   }
 
@@ -89,9 +83,9 @@ class HomeActivityDock extends ConsumerWidget {
             label: Text(activity.name),
             backgroundColor: activity.colorHex?.toColor(),
             onPressed: () {
-              // ref.read(ongoingNotifierProvider.notifier).addActivity(
-              //       activity,
-              //     );
+              ref
+                  .read(liveActivityNotifierProvider.notifier)
+                  .startActivity(activity);
             },
           ),
         ),
