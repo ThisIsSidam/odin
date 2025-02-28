@@ -8,3 +8,9 @@ part 'generated/global_providers.g.dart';
 Store objectboxStore(Ref ref) {
   throw UnimplementedError('Objectbox store has not been created yet!');
 }
+
+@riverpod
+Stream<DateTime> dateTime(Ref ref) {
+  const Duration interval = Duration(minutes: 1);
+  return Stream<DateTime>.periodic(interval, (_) => DateTime.now());
+}

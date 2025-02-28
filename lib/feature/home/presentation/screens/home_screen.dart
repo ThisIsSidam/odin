@@ -9,7 +9,7 @@ import '../../../../router/app_routes.dart';
 import '../../data/entities/live_activity_entity.dart';
 import '../providers/activity_provider.dart';
 import '../providers/live_activity_provider.dart';
-import '../widgets/ongoing_activities_section.dart';
+import '../widgets/live_activity_section.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -22,7 +22,7 @@ class HomeScreen extends ConsumerWidget {
         title: const Text('Ongoing Activities'),
       ),
       bottomSheet: const HomeActivityDock(),
-      body: const OngoingActivitiesSection(),
+      body: const LiveActivitySection(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           ref.read(liveActivityNotifierProvider.notifier).startActivity(null);

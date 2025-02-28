@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/data/entities/activity_entities.dart';
@@ -38,5 +40,13 @@ class LiveActivityNotifier extends _$LiveActivityNotifier {
     );
     newActivity.activity.target = activity;
     _box.put(newActivity);
+  }
+
+  // void pauseActivity() {}
+  // void resumeActivity() {}
+  void stopActivity(int id) {
+    // TODO: Add to ActivityLogs box
+    final bool removed = _box.remove(id);
+    log('Activity $id removed: $removed');
   }
 }

@@ -4,31 +4,45 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class AsyncValueWidget<T> extends StatelessWidget {
   const AsyncValueWidget({
     required this.value,
-    required this.data,
+    required Widget Function(T) this.data,
+    this.loading,
+    this.error,
+    super.key,
+  }) : orElse = null;
+
+  const AsyncValueWidget.orElse({
+    required this.value,
+    required Widget Function() this.orElse,
+    this.data,
     this.loading,
     this.error,
     super.key,
   });
 
   final AsyncValue<T> value;
-  final Widget Function(T) data;
-  final Widget? loading;
+  final Widget Function(T)? data;
+  final Widget Function()? loading;
   final Widget Function(Object, StackTrace?)? error;
+  final Widget Function()? orElse;
 
   @override
   Widget build(BuildContext context) {
     return value.when(
-      data: data,
-      loading: () =>
-          loading ?? const Center(child: CircularProgressIndicator()),
-      error: (Object e, StackTrace st) =>
-          error?.call(e, st) ??
-          Center(
-            child: Text(
-              e.toString(),
-              style: const TextStyle(color: Colors.red),
-            ),
-          ),
+      data: getData(),
+      loading: getLoading(),
+      error: getError(),
     );
+  }
+
+  Widget Function(T) getData() {
+    return data ?? (_) => orElse!.call();
+  }
+
+  Widget Function() getLoading() {
+    return loading ?? orElse ?? CircularProgressIndicator.new;
+  }
+
+  Widget Function(Object, StackTrace?) getError() {
+    return error ?? (_, __) => orElse!.call();
   }
 }
