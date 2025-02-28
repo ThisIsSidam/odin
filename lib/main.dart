@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'core/providers/global_providers.dart';
 import 'core/theme/theme.dart';
-import 'feature/home/presentation/screens/home_screen.dart';
+import 'feature/home/presentation/screens/dashboard_screen.dart';
 import 'objectbox.g.dart';
 import 'router/route_builder.dart';
 
@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const HomeScreen(),
+      home: const DashboardScreen(),
       routes: routeBuilder(),
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
