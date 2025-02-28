@@ -4,8 +4,12 @@ extension DateTimeX on DateTime {
   String get hm => DateFormat.Hm().format(this);
   String get friendly => DateFormat.yMMMd().format(this);
 
+  bool isSameDayAs(DateTime other) {
+    return year == other.year && month == other.month && day == other.month;
+  }
+
   String getDateRange(DateTime other) {
-    if (day == other.day) {
+    if (isSameDayAs(other)) {
       return '$hm - ${other.hm}';
     }
     return '$friendly - ${other.friendly}';

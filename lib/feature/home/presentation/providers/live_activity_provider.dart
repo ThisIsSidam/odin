@@ -47,7 +47,7 @@ class LiveActivityNotifier extends _$LiveActivityNotifier {
   // void resumeActivity() {}
   void stopActivity(int id) {
     ref
-        .read(activityLogsNotifierProvider.notifier)
+        .read(activityLogsNotifierProvider(null).notifier)
         .addActivityLog(state.firstWhere((LiveActivity e) => e.id == id));
     final bool removed = _box.remove(id);
     log('Activity $id removed: $removed');
