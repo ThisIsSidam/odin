@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../core/data/entities/activity_entities.dart';
+import '../../../../core/data/entities/activity_entity.dart';
 import '../../../../core/providers/global_providers.dart';
 import '../../../../objectbox.g.dart';
 import '../../data/entities/live_activity_entity.dart';
@@ -11,11 +11,11 @@ part 'generated/live_activity_provider.g.dart';
 
 @riverpod
 class LiveActivityNotifier extends _$LiveActivityNotifier {
-  late Box<LiveActivityEntity> _box;
+  late Box<LiveActivity> _box;
   @override
-  List<LiveActivityEntity> build() {
+  List<LiveActivity> build() {
     final Store store = ref.watch(objectboxStoreProvider);
-    _box = store.box<LiveActivityEntity>();
+    _box = store.box<LiveActivity>();
     _startListener();
     return _box.query().build().find();
   }
@@ -25,17 +25,17 @@ class LiveActivityNotifier extends _$LiveActivityNotifier {
         .query()
         .watch(triggerImmediately: true)
         .map(
-          (Query<LiveActivityEntity> query) => query.find(),
+          (Query<LiveActivity> query) => query.find(),
         )
         .listen(
-      (List<LiveActivityEntity> list) {
+      (List<LiveActivity> list) {
         state = list;
       },
     );
   }
 
-  void startActivity(ActivityEntity? activity) {
-    final LiveActivityEntity newActivity = LiveActivityEntity(
+  void startActivity(Activity? activity) {
+    final LiveActivity newActivity = LiveActivity(
       startedAt: DateTime.now(),
     );
     newActivity.activity.target = activity;

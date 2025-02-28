@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../../core/data/entities/activity_entities.dart';
+import '../../../../core/data/entities/activity_entity.dart';
 import '../../../../router/app_routes.dart';
 import '../../data/entities/live_activity_entity.dart';
 import '../providers/activity_provider.dart';
@@ -38,8 +38,8 @@ class HomeActivityDock extends ConsumerWidget {
   const HomeActivityDock({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<ActivityEntity> activities = ref.watch(activityNotifierProvider);
-    final List<LiveActivityEntity> liveActivities =
+    final List<Activity> activities = ref.watch(activityNotifierProvider);
+    final List<LiveActivity> liveActivities =
         ref.watch(liveActivityNotifierProvider);
 
     final Size size = MediaQuery.sizeOf(context);
@@ -66,7 +66,7 @@ class HomeActivityDock extends ConsumerWidget {
   Widget _buildActivityChips(
     BuildContext context,
     WidgetRef ref,
-    List<ActivityEntity> activities,
+    List<Activity> activities,
   ) {
     return Wrap(
       spacing: 8,
@@ -79,7 +79,7 @@ class HomeActivityDock extends ConsumerWidget {
           },
         ),
         ...activities.map(
-          (ActivityEntity activity) => ActionChip(
+          (Activity activity) => ActionChip(
             label: Text(activity.name),
             backgroundColor: activity.colorHex?.toColor(),
             onPressed: () {

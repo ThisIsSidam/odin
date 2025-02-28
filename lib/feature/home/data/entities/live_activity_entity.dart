@@ -1,17 +1,17 @@
 import 'package:objectbox/objectbox.dart';
 
-import '../../../../core/data/entities/activity_entities.dart';
+import '../../../../core/data/entities/activity_entity.dart';
 
 @Entity()
-class LiveActivityEntity {
+class LiveActivity {
   @Id()
   int id;
   @Property(type: PropertyType.date)
   DateTime startedAt;
-  ToOne<ActivityEntity> activity = ToOne<ActivityEntity>();
+  ToOne<Activity> activity = ToOne<Activity>();
   String? note;
 
-  LiveActivityEntity({
+  LiveActivity({
     required this.startedAt,
     this.id = 0,
     this.note,

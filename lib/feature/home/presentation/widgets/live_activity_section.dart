@@ -4,7 +4,7 @@ import 'package:duration/duration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/data/entities/activity_entities.dart';
+import '../../../../core/data/entities/activity_entity.dart';
 import '../../../../core/providers/global_providers.dart';
 import '../../../../shared/riverpod_widgets/state_selecter.dart';
 import '../../data/entities/live_activity_entity.dart';
@@ -15,7 +15,7 @@ class LiveActivitySection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<LiveActivityEntity> activities =
+    final List<LiveActivity> activities =
         ref.watch(liveActivityNotifierProvider);
     final Size size = MediaQuery.sizeOf(context);
 
@@ -54,11 +54,11 @@ class LiveActivityCard extends ConsumerWidget {
     super.key,
   });
 
-  final LiveActivityEntity live;
+  final LiveActivity live;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ActivityEntity? activity = live.activity.target;
+    final Activity? activity = live.activity.target;
     return ListTile(
       title: activity?.id == null
           ? Text(

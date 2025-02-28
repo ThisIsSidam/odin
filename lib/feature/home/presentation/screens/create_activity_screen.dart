@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 // import '../../../../core/extensions/color_ext.dart';
-import '../../../../core/data/entities/activity_entities.dart';
+import '../../../../core/data/entities/activity_entity.dart';
 import '../providers/activity_provider.dart';
 
 class CreateActivityScreen extends ConsumerWidget {
@@ -24,7 +24,7 @@ class CreateActivityScreen extends ConsumerWidget {
     FormGroup form,
   ) {
     if (form.valid) {
-      final ActivityEntity newActivity = ActivityEntity(
+      final Activity newActivity = Activity(
         name: form.control('name').value as String,
         description: form.control('description').value as String,
         importanceLevel: form.control('importanceLevel').value as int,
