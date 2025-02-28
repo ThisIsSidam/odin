@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../core/data/entities/activity_entity.dart';
 import '../../../../core/providers/global_providers.dart';
 import '../../../../objectbox.g.dart';
+import '../../../activity_logs/presentation/providers/activity_logs_provider.dart';
 import '../../data/entities/live_activity_entity.dart';
 
 part 'generated/live_activity_provider.g.dart';
@@ -45,7 +46,9 @@ class LiveActivityNotifier extends _$LiveActivityNotifier {
   // void pauseActivity() {}
   // void resumeActivity() {}
   void stopActivity(int id) {
-    // TODO: Add to ActivityLogs box
+    ref
+        .read(activityLogsNotifierProvider.notifier)
+        .addActivityLog(state.firstWhere((LiveActivity e) => e.id == id));
     final bool removed = _box.remove(id);
     log('Activity $id removed: $removed');
   }
