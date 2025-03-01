@@ -4,10 +4,10 @@ import 'package:duration/duration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/data/entities/activity_entity.dart';
+import '../../../../core/data/models/activity.dart';
 import '../../../../core/providers/global_providers.dart';
 import '../../../../shared/riverpod_widgets/state_selecter.dart';
-import '../../data/entities/live_activity_entity.dart';
+import '../../data/models/live_activity.dart';
 import '../providers/live_activity_provider.dart';
 
 class LiveActivitySection extends ConsumerWidget {
@@ -58,7 +58,7 @@ class LiveActivityCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Activity? activity = live.activity.target;
+    final Activity? activity = live.activity;
     return ListTile(
       title: activity?.id == null
           ? Text(

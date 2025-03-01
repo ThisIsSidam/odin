@@ -1,17 +1,13 @@
-import 'package:objectbox/objectbox.dart';
+import '../entities/activity_entity.dart';
 
-import '../models/activity.dart';
-
-@Entity()
-class ActivityEntity {
-  @Id()
+class Activity {
   int id;
   String name;
   String? description;
   int importanceLevel;
   String? colorHex;
 
-  ActivityEntity({
+  Activity({
     required this.name,
     this.id = 0,
     this.description = '',
@@ -19,8 +15,13 @@ class ActivityEntity {
     this.colorHex,
   });
 
-  Activity get toModel {
-    return Activity(
+  Activity.notFound()
+      : id = 0,
+        name = 'Activity not found!',
+        importanceLevel = 1;
+
+  ActivityEntity get toEntity {
+    return ActivityEntity(
       id: id,
       name: name,
       description: description,

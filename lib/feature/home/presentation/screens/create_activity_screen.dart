@@ -24,7 +24,7 @@ class CreateActivityScreen extends ConsumerWidget {
     FormGroup form,
   ) {
     if (form.valid) {
-      final Activity newActivity = Activity(
+      final ActivityEntity newActivity = ActivityEntity(
         name: form.control('name').value as String,
         description: form.control('description').value as String,
         importanceLevel: form.control('importanceLevel').value as int,

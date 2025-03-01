@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/extensions/datetime_ext.dart';
-import '../../data/entities/activity_log_entity.dart';
+import '../../data/models/activity_log.dart';
 import '../providers/activity_logs_provider.dart';
 
 class ActivityLogsScreen extends HookConsumerWidget {
@@ -68,20 +68,9 @@ class ActivityLogTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (log.activity.target == null) return _buildCurroptedTile();
     return ListTile(
       leading: const Icon(Icons.question_mark),
-      title: Text(log.activity.target!.name),
-      subtitle: Text(log.startedAt.getDateRange(log.stoppedAt)),
-    );
-  }
-
-  Widget _buildCurroptedTile() {
-    return ListTile(
-      leading: const Icon(Icons.question_mark),
-      title: const Text(
-        "Data regarding associated activity wasn't properly saved!",
-      ),
+      title: Text(log.activity.name),
       subtitle: Text(log.startedAt.getDateRange(log.stoppedAt)),
     );
   }

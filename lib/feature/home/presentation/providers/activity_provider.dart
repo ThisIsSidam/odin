@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/data/entities/activity_entity.dart';
+import '../../../../core/data/models/activity.dart';
 import '../../../../core/providers/global_providers.dart';
 import '../../../../objectbox.g.dart';
 
@@ -8,13 +9,16 @@ part 'generated/activity_provider.g.dart';
 
 @riverpod
 class ActivityNotifier extends _$ActivityNotifier {
-  late Box<Activity> _box;
+  late Box<ActivityEntity> _box;
   @override
   List<Activity> build() {
     final Store store = ref.watch(objectboxStoreProvider);
-    _box = store.box<Activity>();
+    _box = store.box<ActivityEntity>();
     _startListener();
-    return _box.query().build().find();
+    return _box
+        .getAll()
+        .map((ActivityEntity entity) => entity.toModel)
+        .toList();
   }
 
   void _startListener() {
@@ -22,16 +26,16 @@ class ActivityNotifier extends _$ActivityNotifier {
         .query()
         .watch(triggerImmediately: true)
         .map(
-          (Query<Activity> query) => query.find(),
+          (Query<ActivityEntity> query) => query.find(),
         )
         .listen(
-      (List<Activity> list) {
-        state = list;
+      (List<ActivityEntity> list) {
+        state = list.map((ActivityEntity entity) => entity.toModel).toList();
       },
     );
   }
 
-  void createActivity(Activity activity) {
+  void createActivity(ActivityEntity activity) {
     _box.put(activity);
   }
 }

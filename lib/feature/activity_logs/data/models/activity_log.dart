@@ -1,41 +1,40 @@
 import 'package:objectbox/objectbox.dart';
 
-import '../../../../core/data/entities/activity_entity.dart';
 import '../../../../core/data/models/activity.dart';
-import '../../../home/data/entities/live_activity_entity.dart';
-import '../models/activity_log.dart';
+import '../../../home/data/models/live_activity.dart';
+import '../entities/activity_log_entity.dart';
 
-@Entity()
-class ActivityLogEntity {
-  ActivityLogEntity({
+class ActivityLog {
+  ActivityLog({
     required this.startedAt,
     required this.stoppedAt,
+    required this.activity,
     this.id = 0,
     this.note,
   });
 
-  ActivityLogEntity.fromLive(LiveActivityEntity live)
-      : id = 0,
+  ActivityLog.fromLive(LiveActivity live)
+      : assert(live.activity != null),
+        id = 0,
         startedAt = live.startedAt,
         stoppedAt = DateTime.now(),
+        activity = live.activity!,
         note = live.note;
 
-  @Id()
   int id;
   @Property(type: PropertyType.date)
   DateTime startedAt;
   @Property(type: PropertyType.date)
   DateTime stoppedAt;
-  ToOne<ActivityEntity> activity = ToOne<ActivityEntity>();
+  Activity activity;
   String? note;
 
-  ActivityLog get toModel {
-    return ActivityLog(
+  ActivityLogEntity get toEntity {
+    return ActivityLogEntity(
       id: id,
       startedAt: startedAt,
       stoppedAt: stoppedAt,
-      activity: activity.target?.toModel ?? Activity.notFound(),
       note: note,
-    );
+    )..activity.target = activity.toEntity;
   }
 }

@@ -4,33 +4,39 @@ import '../../../../core/providers/global_providers.dart';
 import '../../../../objectbox.g.dart';
 import '../../../home/data/entities/live_activity_entity.dart';
 import '../../data/entities/activity_log_entity.dart';
+import '../../data/models/activity_log.dart';
 
 part 'generated/activity_logs_provider.g.dart';
 
 @riverpod
 class ActivityLogsNotifier extends _$ActivityLogsNotifier {
-  late Box<ActivityLog> _box;
+  late Box<ActivityLogEntity> _box;
 
   @override
   List<ActivityLog> build(DateTime? dt) {
     final Store store = ref.watch(objectboxStoreProvider);
-    _box = store.box<ActivityLog>();
+    _box = store.box<ActivityLogEntity>();
     _startListener(dt);
     if (dt == null) {
-      return _box.getAll();
+      return _box
+          .getAll()
+          .map((ActivityLogEntity entity) => entity.toModel)
+          .toList();
     }
     return _box
         .query(
-          ActivityLog_.startedAt.greaterThanDate(
+          ActivityLogEntity_.startedAt.greaterThanDate(
             DateTime(dt.year, dt.month, dt.day),
           )..and(
-              ActivityLog_.startedAt.lessThanDate(
+              ActivityLogEntity_.startedAt.lessThanDate(
                 DateTime(dt.year, dt.month, dt.day + 1),
               ),
             ),
         )
         .build()
-        .find();
+        .find()
+        .map((ActivityLogEntity entity) => entity.toModel)
+        .toList();
   }
 
   void _startListener(DateTime? dt) {
@@ -39,38 +45,39 @@ class ActivityLogsNotifier extends _$ActivityLogsNotifier {
           .query()
           .watch(triggerImmediately: true)
           .map(
-            (Query<ActivityLog> query) => query.find(),
+            (Query<ActivityLogEntity> query) => query.find(),
           )
           .listen(
-        (List<ActivityLog> list) {
-          state = list;
+        (List<ActivityLogEntity> list) {
+          state =
+              list.map((ActivityLogEntity entity) => entity.toModel).toList();
         },
       );
       return;
     }
     _box
         .query(
-          ActivityLog_.startedAt.greaterThanDate(
+          ActivityLogEntity_.startedAt.greaterThanDate(
             DateTime(dt.year, dt.month, dt.day),
           )..and(
-              ActivityLog_.startedAt.lessThanDate(
+              ActivityLogEntity_.startedAt.lessThanDate(
                 DateTime(dt.year, dt.month, dt.day + 1),
               ),
             ),
         )
         .watch(triggerImmediately: true)
         .map(
-          (Query<ActivityLog> query) => query.find(),
+          (Query<ActivityLogEntity> query) => query.find(),
         )
         .listen(
-      (List<ActivityLog> list) {
-        state = list;
+      (List<ActivityLogEntity> list) {
+        state = list.map((ActivityLogEntity entity) => entity.toModel).toList();
       },
     );
   }
 
-  void addActivityLog(LiveActivity live) {
-    final ActivityLog log = ActivityLog.fromLive(
+  void addActivityLog(LiveActivityEntity live) {
+    final ActivityLogEntity log = ActivityLogEntity.fromLive(
       live,
     );
     log.activity.target = live.activity.target;
