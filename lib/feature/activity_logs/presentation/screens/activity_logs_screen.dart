@@ -46,7 +46,7 @@ class ActivityLogsScreen extends HookConsumerWidget {
                 dateNotifier.value =
                     dateNotifier.value.add(const Duration(days: 1));
               },
-              icon: const Icon(Icons.chevron_left),
+              icon: const Icon(Icons.chevron_right),
             ),
           ],
         ),

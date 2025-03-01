@@ -5,7 +5,7 @@ extension DateTimeX on DateTime {
   String get friendly => DateFormat.yMMMd().format(this);
 
   bool isSameDayAs(DateTime other) {
-    return year == other.year && month == other.month && day == other.month;
+    return year == other.year && month == other.month && day == other.day;
   }
 
   String getDateRange(DateTime other) {

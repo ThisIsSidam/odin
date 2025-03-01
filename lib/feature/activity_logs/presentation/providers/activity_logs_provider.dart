@@ -25,13 +25,14 @@ class ActivityLogsNotifier extends _$ActivityLogsNotifier {
     }
     return _box
         .query(
-          ActivityLogEntity_.startedAt.greaterThanDate(
-            DateTime(dt.year, dt.month, dt.day),
-          )..and(
-              ActivityLogEntity_.startedAt.lessThanDate(
-                DateTime(dt.year, dt.month, dt.day + 1),
-              ),
+          ActivityLogEntity_.startedAt.betweenDate(
+            DateTime(
+              dt.year,
+              dt.month,
+              dt.day,
             ),
+            DateTime(dt.year, dt.month, dt.day + 1),
+          ),
         )
         .build()
         .find()
@@ -57,13 +58,14 @@ class ActivityLogsNotifier extends _$ActivityLogsNotifier {
     }
     _box
         .query(
-          ActivityLogEntity_.startedAt.greaterThanDate(
-            DateTime(dt.year, dt.month, dt.day),
-          )..and(
-              ActivityLogEntity_.startedAt.lessThanDate(
-                DateTime(dt.year, dt.month, dt.day + 1),
-              ),
+          ActivityLogEntity_.startedAt.betweenDate(
+            DateTime(
+              dt.year,
+              dt.month,
+              dt.day,
             ),
+            DateTime(dt.year, dt.month, dt.day + 1),
+          ),
         )
         .watch(triggerImmediately: true)
         .map(
