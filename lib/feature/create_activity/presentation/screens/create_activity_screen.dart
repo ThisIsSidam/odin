@@ -56,6 +56,7 @@ class ActivityScreen extends ConsumerWidget {
                 ref
                     .read(activityNotifierProvider.notifier)
                     .removeActivity(activity.id);
+                Navigator.pop(context);
               },
             ),
         ],
