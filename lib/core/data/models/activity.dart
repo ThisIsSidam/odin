@@ -8,28 +8,28 @@ class Activity {
   int id;
   String name;
   String? description;
-  int importanceLevel;
+  int productivityLevel;
   Color? color;
 
   Activity({
     required this.name,
     this.id = 0,
     this.description = '',
-    this.importanceLevel = 1,
+    this.productivityLevel = 1,
     this.color,
   });
 
   Activity.notFound()
       : id = 0,
         name = 'Activity not found!',
-        importanceLevel = 1;
+        productivityLevel = 1;
 
   ActivityEntity get toEntity {
     return ActivityEntity(
       id: id,
       name: name,
       description: description,
-      importanceLevel: importanceLevel,
+      productivityLevel: productivityLevel,
       colorHex: color?.toHexString(),
     );
   }

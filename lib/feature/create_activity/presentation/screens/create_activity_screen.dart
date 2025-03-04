@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -8,6 +7,8 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../../../../core/data/entities/activity_entity.dart';
 import '../../../../core/data/models/activity.dart';
 import '../../../home/presentation/providers/activity_provider.dart';
+import '../widgets/color_field.dart';
+import '../widgets/productivity_field.dart';
 
 class ActivityScreen extends ConsumerWidget {
   const ActivityScreen({this.id, super.key});
@@ -17,7 +18,7 @@ class ActivityScreen extends ConsumerWidget {
   FormGroup buildForm(Activity? activity) => fb.group(<String, List<Object?>>{
         'name': <void>[activity?.name ?? '', Validators.required],
         'description': <String>[activity?.description ?? ''],
-        // 'importanceLevel': <int>[1],
+        'productivityLvl': <int>[activity?.productivityLevel ?? 3],
         'colorHex': <void>[activity?.color?.toHexString()],
       });
 
@@ -31,7 +32,7 @@ class ActivityScreen extends ConsumerWidget {
         id: id ?? 0,
         name: form.control('name').value as String,
         description: form.control('description').value as String,
-        // importanceLevel: form.control('importanceLevel').value as int,
+        productivityLevel: form.control('productivityLvl').value as int,
         colorHex: form.control('colorHex').value as String?,
       );
       ref.read(activityNotifierProvider.notifier).createActivity(newActivity);
@@ -83,6 +84,7 @@ class ActivityScreen extends ConsumerWidget {
                   },
                 ),
                 ColorPickerField(form: form),
+                ProductivityLvlField(form: form),
                 ReactiveTextField<String>(
                   formControlName: 'description',
                   decoration: const InputDecoration(
@@ -101,58 +103,6 @@ class ActivityScreen extends ConsumerWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class ColorPickerField extends HookConsumerWidget {
-  const ColorPickerField({required this.form, super.key});
-  final FormGroup form;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final ValueNotifier<Color?> pickedColor = useValueNotifier<Color?>(null);
-    final ExpansionTileController expansionController =
-        useExpansionTileController();
-
-    return ExpansionTile(
-      controller: expansionController,
-      title: const Text(
-        'Color',
-      ),
-      trailing: ValueListenableBuilder<Color?>(
-        valueListenable: pickedColor,
-        builder: (BuildContext context, Color? color, Widget? child) {
-          return Icon(
-            Icons.color_lens,
-            color: color,
-          );
-        },
-      ),
-      children: <Widget>[
-        Wrap(
-          children: Colors.primaries
-              .map(
-                (MaterialColor color) => InkWell(
-                  onTap: () {
-                    pickedColor.value = color;
-                    form.control('colorHex').value = color.toHexString();
-                    expansionController.collapse();
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.all(4),
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: color,
-                    ),
-                  ),
-                ),
-              )
-              .toList(),
-        ),
-      ],
     );
   }
 }
