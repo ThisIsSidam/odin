@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/data/models/activity.dart';
@@ -52,7 +51,7 @@ class HomeScreen extends ConsumerWidget {
             ...activities.map(
               (Activity activity) => ActionChip(
                 label: Text(activity.name),
-                backgroundColor: activity.colorHex?.toColor(),
+                backgroundColor: activity.color,
                 onPressed: () {
                   ref
                       .read(liveActivityNotifierProvider.notifier)

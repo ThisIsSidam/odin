@@ -6,7 +6,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 // import '../../../../core/extensions/color_ext.dart';
 import '../../../../core/data/entities/activity_entity.dart';
-import '../providers/activity_provider.dart';
+import '../../../home/presentation/providers/activity_provider.dart';
 
 class CreateActivityScreen extends ConsumerWidget {
   const CreateActivityScreen({super.key});
@@ -58,7 +58,7 @@ class CreateActivityScreen extends ConsumerWidget {
                 ReactiveTextField<String>(
                   formControlName: 'name',
                   decoration: const InputDecoration(
-                    labelText: 'Activity Name',
+                    labelText: 'Name',
                   ),
                   validationMessages: <String, String Function(dynamic error)>{
                     'required': (_) => 'Please enter an activity name',
@@ -91,90 +91,48 @@ class ColorPickerField extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final TextEditingController colorController = useTextEditingController(
-      text: form.control('colorHex').value as String?,
-    );
-
     final ValueNotifier<Color?> pickedColor = useValueNotifier<Color?>(null);
+    final ExpansionTileController expansionController =
+        useExpansionTileController();
 
-    useEffect(
-      () {
-        form.control('colorHex').valueChanges.listen(
-          (dynamic value) {
-            colorController.text = value as String? ?? '';
-            pickedColor.value = colorController.text.toColor();
-          },
-        );
-
-        return null;
-      },
-      <Object?>[],
-    );
-    return TextField(
-      controller: colorController,
-      readOnly: true,
-      decoration: InputDecoration(
-        labelText: 'Color',
-        prefix: const Text('#'),
-        suffixIcon: IconButton(
-          icon: ValueListenableBuilder<Color?>(
-            valueListenable: pickedColor,
-            builder: (BuildContext context, Color? color, Widget? child) {
-              return Icon(
-                Icons.color_lens,
-                color: color,
-              );
-            },
-          ),
-          onPressed: () {
-            showDialog<void>(
-              context: context,
-              builder: (BuildContext context) {
-                return _buildColorPickerDialog(context, pickedColor);
-              },
-            );
-          },
-        ),
+    return ExpansionTile(
+      controller: expansionController,
+      title: const Text(
+        'Color',
       ),
-    );
-  }
-
-  Widget _buildColorPickerDialog(
-    BuildContext context,
-    ValueNotifier<Color?> pickedColor,
-  ) {
-    return PopScope(
-      canPop: false,
-      child: AlertDialog(
-        title: const Text('Pick a color'),
-        content: SingleChildScrollView(
-          child: ValueListenableBuilder<Color?>(
-            valueListenable: pickedColor,
-            builder: (BuildContext context, Color? color, Widget? child) {
-              return ColorPicker(
-                pickerColor: color ?? Colors.blue,
-                onColorChanged: (Color color) {
-                  form.control('colorHex').value = color.toHexString();
-                },
-                pickerAreaHeightPercent: 0.7,
-                enableAlpha: false,
-                displayThumbColor: true,
-                pickerAreaBorderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(2),
-                  topRight: Radius.circular(2),
+      trailing: ValueListenableBuilder<Color?>(
+        valueListenable: pickedColor,
+        builder: (BuildContext context, Color? color, Widget? child) {
+          return Icon(
+            Icons.color_lens,
+            color: color,
+          );
+        },
+      ),
+      children: <Widget>[
+        Wrap(
+          children: Colors.primaries
+              .map(
+                (MaterialColor color) => InkWell(
+                  onTap: () {
+                    pickedColor.value = color;
+                    form.control('colorHex').value = color.toHexString();
+                    expansionController.collapse();
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.all(4),
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: color,
+                    ),
+                  ),
                 ),
-                hexInputBar: true,
-              );
-            },
-          ),
+              )
+              .toList(),
         ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Done'),
-          ),
-        ],
-      ),
+      ],
     );
   }
 }

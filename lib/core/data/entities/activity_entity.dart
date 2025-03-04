@@ -1,3 +1,4 @@
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:objectbox/objectbox.dart';
 
 import '../models/activity.dart';
@@ -25,7 +26,7 @@ class ActivityEntity {
       name: name,
       description: description,
       importanceLevel: importanceLevel,
-      colorHex: colorHex,
+      color: colorHex?.toColor(),
     );
   }
 }

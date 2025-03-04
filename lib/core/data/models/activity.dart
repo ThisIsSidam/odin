@@ -1,3 +1,7 @@
+import 'dart:ui';
+
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+
 import '../entities/activity_entity.dart';
 
 class Activity {
@@ -5,14 +9,14 @@ class Activity {
   String name;
   String? description;
   int importanceLevel;
-  String? colorHex;
+  Color? color;
 
   Activity({
     required this.name,
     this.id = 0,
     this.description = '',
     this.importanceLevel = 1,
-    this.colorHex,
+    this.color,
   });
 
   Activity.notFound()
@@ -26,7 +30,7 @@ class Activity {
       name: name,
       description: description,
       importanceLevel: importanceLevel,
-      colorHex: colorHex,
+      colorHex: color?.toHexString(),
     );
   }
 }
