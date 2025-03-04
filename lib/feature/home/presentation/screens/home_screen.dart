@@ -49,24 +49,26 @@ class HomeScreen extends ConsumerWidget {
               },
             ),
             ...activities.map(
-              (Activity activity) => ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: activity.color,
-                ),
-                onPressed: () {
-                  ref
-                      .read(liveActivityNotifierProvider.notifier)
-                      .startActivity(activity);
-                },
-                onLongPress: () {
-                  Navigator.pushNamed(
-                    context,
-                    AppRoutes.activity.path,
-                    arguments: activity.id.toString(),
-                  );
-                },
-                child: Text(activity.name),
-              ),
+              (Activity activity) => activity.hidden
+                  ? const SizedBox.shrink()
+                  : ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: activity.color,
+                      ),
+                      onPressed: () {
+                        ref
+                            .read(liveActivityNotifierProvider.notifier)
+                            .startActivity(activity);
+                      },
+                      onLongPress: () {
+                        Navigator.pushNamed(
+                          context,
+                          AppRoutes.activity.path,
+                          arguments: activity.id.toString(),
+                        );
+                      },
+                      child: Text(activity.name),
+                    ),
             ),
           ],
         ),

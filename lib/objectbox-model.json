@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "12:9044380667559899142",
-      "lastPropertyId": "6:2418459732005933637",
+      "lastPropertyId": "7:2459496791016974108",
       "name": "ActivityEntity",
       "properties": [
         {
@@ -33,6 +33,11 @@
           "id": "6:2418459732005933637",
           "name": "productivityLevel",
           "type": 6
+        },
+        {
+          "id": "7:2459496791016974108",
+          "name": "hidden",
+          "type": 1
         }
       ],
       "relations": []

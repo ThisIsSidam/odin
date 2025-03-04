@@ -11,6 +11,7 @@ class ActivityEntity {
   String? description;
   int productivityLevel;
   String? colorHex;
+  bool hidden;
 
   ActivityEntity({
     required this.name,
@@ -18,6 +19,7 @@ class ActivityEntity {
     this.description = '',
     this.productivityLevel = 1,
     this.colorHex,
+    this.hidden = false,
   });
 
   Activity get toModel {
@@ -27,6 +29,7 @@ class ActivityEntity {
       description: description,
       productivityLevel: productivityLevel,
       color: colorHex?.toColor(),
+      hidden: hidden,
     );
   }
 }

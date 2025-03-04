@@ -10,6 +10,7 @@ class Activity {
   String? description;
   int productivityLevel;
   Color? color;
+  bool hidden;
 
   Activity({
     required this.name,
@@ -17,12 +18,14 @@ class Activity {
     this.description = '',
     this.productivityLevel = 1,
     this.color,
+    this.hidden = false,
   });
 
   Activity.notFound()
       : id = 0,
         name = 'Activity not found!',
-        productivityLevel = 1;
+        productivityLevel = 1,
+        hidden = false;
 
   ActivityEntity get toEntity {
     return ActivityEntity(
@@ -31,6 +34,7 @@ class Activity {
       description: description,
       productivityLevel: productivityLevel,
       colorHex: color?.toHexString(),
+      hidden: hidden,
     );
   }
 }

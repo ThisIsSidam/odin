@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../feature/create_activity/presentation/screens/create_activity_screen.dart';
+import '../feature/create_activity/presentation/screens/activity_screen.dart';
 import '../feature/home/presentation/screens/home_screen.dart';
 import 'app_routes.dart';
 

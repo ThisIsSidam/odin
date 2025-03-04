@@ -47,15 +47,15 @@ class ActivityScreen extends ConsumerWidget {
         : null;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Activity'),
+        title: Text(id == null ? 'Create Activity' : 'Edit Activiy'),
         actions: <Widget>[
           if (activity != null)
             IconButton(
-              icon: const Icon(Icons.delete),
+              icon: const Icon(Icons.hide_source),
               onPressed: () {
                 ref
                     .read(activityNotifierProvider.notifier)
-                    .removeActivity(activity.id);
+                    .hideActivity(activity.id);
                 Navigator.pop(context);
               },
             ),

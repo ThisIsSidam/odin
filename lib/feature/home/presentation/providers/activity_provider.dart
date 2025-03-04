@@ -43,7 +43,10 @@ class ActivityNotifier extends _$ActivityNotifier {
     return _box.get(id)?.toModel;
   }
 
-  bool removeActivity(int id) {
-    return _box.remove(id);
+  void hideActivity(int id) {
+    final ActivityEntity? entity = _box.get(id);
+    if (entity == null) return;
+    entity.hidden = true;
+    _box.put(entity);
   }
 }
