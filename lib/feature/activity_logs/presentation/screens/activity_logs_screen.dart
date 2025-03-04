@@ -1,3 +1,4 @@
+import 'package:duration/duration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -72,6 +73,7 @@ class ActivityLogTile extends ConsumerWidget {
       leading: const Icon(Icons.question_mark),
       title: Text(log.activity.name),
       subtitle: Text(log.startedAt.getDateRange(log.stoppedAt)),
+      trailing: Text(log.stoppedAt.difference(log.startedAt).pretty()),
     );
   }
 }
