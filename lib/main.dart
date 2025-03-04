@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/providers/global_providers.dart';
 import 'core/theme/theme.dart';
@@ -22,10 +23,12 @@ void main() async {
       'objectbox-activity-store',
     ),
   );
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
   runApp(
     ProviderScope(
       overrides: <Override>[
         objectboxStoreProvider.overrideWithValue(store),
+        sharedPrefsProvider.overrideWithValue(prefs),
       ],
       child: const MyApp(),
     ),
