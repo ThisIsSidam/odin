@@ -45,18 +45,27 @@ class HomeScreen extends ConsumerWidget {
               label: const Text('Add Activity'),
               avatar: const Icon(Icons.add),
               onPressed: () {
-                Navigator.pushNamed(context, AppRoutes.createActivity.path);
+                Navigator.pushNamed(context, AppRoutes.activity.path);
               },
             ),
             ...activities.map(
-              (Activity activity) => ActionChip(
-                label: Text(activity.name),
-                backgroundColor: activity.color,
+              (Activity activity) => ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: activity.color,
+                ),
                 onPressed: () {
                   ref
                       .read(liveActivityNotifierProvider.notifier)
                       .startActivity(activity);
                 },
+                onLongPress: () {
+                  Navigator.pushNamed(
+                    context,
+                    AppRoutes.activity.path,
+                    arguments: activity.id.toString(),
+                  );
+                },
+                child: Text(activity.name),
               ),
             ),
           ],

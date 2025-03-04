@@ -38,4 +38,12 @@ class ActivityNotifier extends _$ActivityNotifier {
   void createActivity(ActivityEntity activity) {
     _box.put(activity);
   }
+
+  Activity? getActivity(int id) {
+    return _box.get(id)?.toModel;
+  }
+
+  bool removeActivity(int id) {
+    return _box.remove(id);
+  }
 }

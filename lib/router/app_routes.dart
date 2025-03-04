@@ -1,6 +1,6 @@
 enum AppRoutes {
   home('/home'),
-  createActivity('/create-activity'),
+  activity('/activity'),
   ;
 
   const AppRoutes(this.path);

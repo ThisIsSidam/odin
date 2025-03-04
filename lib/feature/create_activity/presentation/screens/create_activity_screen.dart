@@ -6,16 +6,19 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 // import '../../../../core/extensions/color_ext.dart';
 import '../../../../core/data/entities/activity_entity.dart';
+import '../../../../core/data/models/activity.dart';
 import '../../../home/presentation/providers/activity_provider.dart';
 
-class CreateActivityScreen extends ConsumerWidget {
-  const CreateActivityScreen({super.key});
+class ActivityScreen extends ConsumerWidget {
+  const ActivityScreen({this.id, super.key});
 
-  FormGroup buildForm() => fb.group(<String, List<Object?>>{
-        'name': <void>['', Validators.required],
-        'description': <String>[''],
-        'importanceLevel': <int>[1],
-        'colorHex': <void>[null],
+  final int? id;
+
+  FormGroup buildForm(Activity? activity) => fb.group(<String, List<Object?>>{
+        'name': <void>[activity?.name ?? '', Validators.required],
+        'description': <String>[activity?.description ?? ''],
+        // 'importanceLevel': <int>[1],
+        'colorHex': <void>[activity?.color?.toHexString()],
       });
 
   void saveActivity(
@@ -25,9 +28,10 @@ class CreateActivityScreen extends ConsumerWidget {
   ) {
     if (form.valid) {
       final ActivityEntity newActivity = ActivityEntity(
+        id: id ?? 0,
         name: form.control('name').value as String,
         description: form.control('description').value as String,
-        importanceLevel: form.control('importanceLevel').value as int,
+        // importanceLevel: form.control('importanceLevel').value as int,
         colorHex: form.control('colorHex').value as String?,
       );
       ref.read(activityNotifierProvider.notifier).createActivity(newActivity);
@@ -37,15 +41,29 @@ class CreateActivityScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final Activity? activity = id != null
+        ? ref.read(activityNotifierProvider.notifier).getActivity(id!)
+        : null;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create Activity'),
+        actions: <Widget>[
+          if (activity != null)
+            IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: () {
+                ref
+                    .read(activityNotifierProvider.notifier)
+                    .removeActivity(activity.id);
+              },
+            ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: ReactiveFormBuilder(
-            form: buildForm,
+            form: () => buildForm(activity),
             builder: (
               BuildContext context,
               FormGroup form,
@@ -74,7 +92,9 @@ class CreateActivityScreen extends ConsumerWidget {
                 ),
                 ElevatedButton(
                   onPressed: () => saveActivity(context, ref, form),
-                  child: const Text('Create Activity'),
+                  child: Text(
+                    id == null ? 'Create Activity' : 'Save Activiy',
+                  ),
                 ),
               ],
             ),

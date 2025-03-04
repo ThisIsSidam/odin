@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: const DashboardScreen(),
       routes: routeBuilder(),
+      onGenerateRoute: onGenerateRoute,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
     );
