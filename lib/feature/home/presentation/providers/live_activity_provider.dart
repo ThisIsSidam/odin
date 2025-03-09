@@ -3,9 +3,12 @@ import 'dart:developer';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/data/models/activity.dart';
+import '../../../../core/exceptions/limitations.dart';
+import '../../../../core/extensions/list_ext.dart';
 import '../../../../core/providers/global_providers.dart';
 import '../../../../objectbox.g.dart';
 import '../../../activity_logs/presentation/providers/activity_logs_provider.dart';
+import '../../../settings/presentation/providers/settings_provider.dart';
 import '../../data/entities/live_activity_entity.dart';
 import '../../data/models/live_activity.dart';
 
@@ -40,7 +43,23 @@ class LiveActivityNotifier extends _$LiveActivityNotifier {
     );
   }
 
+  /// Checks whether a live session of an activity is running or not
+  bool isRunning(Activity activity) {
+    return state.any((LiveActivity e) => e.activity == activity);
+  }
+
   void startActivity(Activity? activity) {
+    if (activity == null || state.isNotEmpty) {
+      // Check if multitasking is allowed
+      final bool allowed =
+          ref.read(settingsProvider.notifier).allowMultitasking;
+      if (!allowed) throw MultiTaskingNotAllowedLimitation();
+
+      // Check if multitasking limit is reached
+      final int max = ref.read(settingsProvider.notifier).multitaskingLimit;
+      if (state.length >= max) throw LiveActivityLimitation();
+    }
+
     final LiveActivityEntity newActivity = LiveActivityEntity(
       startedAt: DateTime.now(),
     );
@@ -48,13 +67,19 @@ class LiveActivityNotifier extends _$LiveActivityNotifier {
     _box.put(newActivity);
   }
 
-  // void pauseActivity() {}
-  // void resumeActivity() {}
+  /// Stops activity through an activity's live session's id
   void stopActivity(int id) {
     ref.read(activityLogsNotifierProvider(null).notifier).addActivityLog(
           state.firstWhere((LiveActivity e) => e.id == id).toEntity,
         );
     final bool removed = _box.remove(id);
     log('Activity $id removed: $removed');
+  }
+
+  void stopMatchingActivity(Activity activity) {
+    final LiveActivity? live = state
+        .firstWhereOrNull((LiveActivity live) => live.activity == activity);
+    if (live == null) return;
+    stopActivity(live.id);
   }
 }

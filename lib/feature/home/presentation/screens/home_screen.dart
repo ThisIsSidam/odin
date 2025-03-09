@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:toastification/toastification.dart';
 
 import '../../../../core/data/models/activity.dart';
+import '../../../../core/exceptions/exceptions.dart';
+import '../../../../core/exceptions/limitations.dart';
 import '../../../../router/app_routes.dart';
+import '../../../../shared/riverpod_widgets/state_selecter.dart';
+import '../../../../shared/utils/app_utils.dart';
+import '../../data/models/live_activity.dart';
 import '../providers/activity_provider.dart';
 import '../providers/live_activity_provider.dart';
 import '../widgets/live_activity_dock.dart';
@@ -49,29 +55,87 @@ class HomeScreen extends ConsumerWidget {
               },
             ),
             ...activities.map(
-              (Activity activity) => activity.hidden
-                  ? const SizedBox.shrink()
-                  : ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: activity.color,
-                      ),
-                      onPressed: () {
-                        ref
-                            .read(liveActivityNotifierProvider.notifier)
-                            .startActivity(activity);
-                      },
-                      onLongPress: () {
-                        Navigator.pushNamed(
-                          context,
-                          AppRoutes.activity.path,
-                          arguments: activity.id.toString(),
-                        );
-                      },
-                      child: Text(activity.name),
-                    ),
+              (Activity activity) => ActivityButton(
+                activity: activity,
+              ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class ActivityButton extends ConsumerWidget {
+  const ActivityButton({required this.activity, super.key});
+
+  final Activity activity;
+
+  void startActivity(WidgetRef ref) {
+    try {
+      ref.read(liveActivityNotifierProvider.notifier).startActivity(activity);
+    } on MultiTaskingNotAllowedLimitation catch (e) {
+      AppUtils.showToast(
+        msg: e.message,
+        style: ToastificationStyle.simple,
+      );
+    } on LiveActivityLimitation catch (e) {
+      AppUtils.showToast(
+        msg: e.message,
+        style: ToastificationStyle.simple,
+      );
+    } catch (_) {
+      AppUtils.showToast(
+        msg: UnknownException().message,
+        style: ToastificationStyle.simple,
+      );
+    }
+  }
+
+  void stopActivity(WidgetRef ref) {
+    ref
+        .read(liveActivityNotifierProvider.notifier)
+        .stopMatchingActivity(activity);
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (activity.hidden) {
+      return const SizedBox.shrink();
+    }
+
+    return StateSelector<List<LiveActivity>, bool>(
+      provider: liveActivityNotifierProvider,
+      selector: (List<LiveActivity> lives) {
+        return lives.any((LiveActivity e) {
+          return e.activity == activity;
+        });
+      },
+      builder: (BuildContext context, bool isRunning) => ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isRunning
+              ? Colors.transparent
+              : activity.color ??
+                  Theme.of(context).colorScheme.secondaryContainer,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(
+              color: isRunning
+                  ? (activity.color ??
+                      Theme.of(context).colorScheme.primaryContainer)
+                  : Colors.transparent,
+            ),
+          ),
+        ),
+        onPressed: () => isRunning ? stopActivity(ref) : startActivity(ref),
+        onLongPress: () {
+          Navigator.pushNamed(
+            context,
+            AppRoutes.activity.path,
+            arguments: activity.id.toString(),
+          );
+        },
+        child: Text(activity.name),
       ),
     );
   }

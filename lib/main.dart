@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toastification/toastification.dart';
 
 import 'core/providers/global_providers.dart';
 import 'core/theme/theme.dart';
@@ -40,12 +41,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const DashboardScreen(),
-      routes: routeBuilder(),
-      onGenerateRoute: onGenerateRoute,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
+    return ToastificationWrapper(
+      child: MaterialApp(
+        home: const DashboardScreen(),
+        routes: routeBuilder(),
+        onGenerateRoute: onGenerateRoute,
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+      ),
     );
   }
 }
