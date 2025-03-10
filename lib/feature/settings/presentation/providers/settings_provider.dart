@@ -46,19 +46,4 @@ class SettingsNotifier extends ChangeNotifier {
     await prefs.setBool(key, value);
     notifyListeners();
   }
-
-  int get multitaskingLimit {
-    const String key = 'multitaskingLimit';
-    final int? value = prefs.getInt(key);
-    if (value == null) {
-      return defaultSettings[key] as int;
-    }
-    return value;
-  }
-
-  Future<void> setMultitaskingLimit(int value) async {
-    const String key = 'multitaskingLimit';
-    await prefs.setInt(key, value);
-    notifyListeners();
-  }
 }

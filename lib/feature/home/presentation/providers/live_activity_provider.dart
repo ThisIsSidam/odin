@@ -54,10 +54,6 @@ class LiveActivityNotifier extends _$LiveActivityNotifier {
       final bool allowed =
           ref.read(settingsProvider.notifier).allowMultitasking;
       if (!allowed) throw MultiTaskingNotAllowedLimitation();
-
-      // Check if multitasking limit is reached
-      final int max = ref.read(settingsProvider.notifier).multitaskingLimit;
-      if (state.length >= max) throw LiveActivityLimitation();
     }
 
     final LiveActivityEntity newActivity = LiveActivityEntity(
