@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as path;
@@ -8,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toastification/toastification.dart';
 
 import 'core/providers/global_providers.dart';
+import 'core/theme/color_schemes.dart';
 import 'core/theme/theme.dart';
 import 'feature/home/presentation/screens/dashboard_screen.dart';
 import 'objectbox.g.dart';
@@ -41,14 +43,28 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ToastificationWrapper(
-      child: MaterialApp(
-        home: const DashboardScreen(),
-        routes: routeBuilder(),
-        onGenerateRoute: onGenerateRoute,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-      ),
+    return DynamicColorBuilder(
+      builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+        ColorScheme lightColorScheme;
+        ColorScheme darkColorScheme;
+
+        if (lightDynamic != null && darkDynamic != null) {
+          lightColorScheme = lightDynamic.harmonized();
+          darkColorScheme = darkDynamic.harmonized();
+        } else {
+          lightColorScheme = appColorScheme;
+          darkColorScheme = appDarkColorScheme;
+        }
+        return ToastificationWrapper(
+          child: MaterialApp(
+            home: const DashboardScreen(),
+            routes: routeBuilder(),
+            onGenerateRoute: onGenerateRoute,
+            theme: getLightTheme(lightColorScheme),
+            darkTheme: getDarkTheme(darkColorScheme),
+          ),
+        );
+      },
     );
   }
 }
