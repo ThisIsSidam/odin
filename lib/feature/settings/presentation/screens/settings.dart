@@ -21,6 +21,7 @@ class SettingsScreen extends ConsumerWidget {
       ),
       body: ListView(
         children: const <Widget>[
+          ThemeTile(),
           AllowMultitaskingTile(),
         ],
       ),

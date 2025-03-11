@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../core/extensions/shared_prefs_ext.dart';
 import '../../../../core/providers/global_providers.dart';
 import 'default_settings.dart';
 
@@ -22,6 +23,8 @@ class SettingsNotifier extends ChangeNotifier {
       final dynamic value = entry.value;
       if (value is double) {
         prefs.setDouble(entry.key, value);
+      } else if (value is ThemeMode) {
+        prefs.setThemeMode(entry.key, value);
       } else {
         log(
           // ignore: lines_longer_than_80_chars
@@ -44,6 +47,21 @@ class SettingsNotifier extends ChangeNotifier {
   Future<void> setAllowMultitasking(bool value) async {
     const String key = 'allowMultitasking';
     await prefs.setBool(key, value);
+    notifyListeners();
+  }
+
+  ThemeMode get themeMode {
+    const String key = 'themeMode';
+    final ThemeMode? value = prefs.getThemeMode(key);
+    if (value == null) {
+      return ThemeMode.system;
+    }
+    return value;
+  }
+
+  Future<void> setThemeMode(ThemeMode value) async {
+    const String key = 'themeMode';
+    await prefs.setThemeMode(key, value);
     notifyListeners();
   }
 }

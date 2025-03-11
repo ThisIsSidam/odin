@@ -23,7 +23,7 @@ class HomeScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Ongoing Activities'),
+        title: const Text('Activities'),
       ),
       body: Column(
         children: <Widget>[

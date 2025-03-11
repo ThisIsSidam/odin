@@ -12,6 +12,7 @@ import 'core/providers/global_providers.dart';
 import 'core/theme/color_schemes.dart';
 import 'core/theme/theme.dart';
 import 'feature/home/presentation/screens/dashboard_screen.dart';
+import 'feature/settings/presentation/providers/settings_provider.dart';
 import 'objectbox.g.dart';
 import 'router/route_builder.dart';
 
@@ -38,11 +39,14 @@ void main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ThemeMode theme = ref.watch(
+      settingsProvider.select((SettingsNotifier s) => s.themeMode),
+    );
     return DynamicColorBuilder(
       builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
         ColorScheme lightColorScheme;
@@ -58,6 +62,7 @@ class MyApp extends StatelessWidget {
         return ToastificationWrapper(
           child: MaterialApp(
             home: const DashboardScreen(),
+            themeMode: theme,
             routes: routeBuilder(),
             onGenerateRoute: onGenerateRoute,
             theme: getLightTheme(lightColorScheme),
