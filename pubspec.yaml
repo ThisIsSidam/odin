@@ -34,6 +34,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   duration: ^4.0.3
   dynamic_color: ^1.7.0
+  emoji_picker_flutter: ^4.3.0
   flutter:
     sdk: flutter
   flutter_colorpicker: ^1.1.0

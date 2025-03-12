@@ -1,11 +1,12 @@
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-class ColorPickerField extends HookConsumerWidget {
-  const ColorPickerField({required this.form, super.key});
+class IconPickerField extends HookConsumerWidget {
+  const IconPickerField({required this.form, super.key});
   final FormGroup form;
 
   @override
@@ -17,7 +18,7 @@ class ColorPickerField extends HookConsumerWidget {
     return ExpansionTile(
       controller: expansionController,
       title: const Text(
-        'Color',
+        'Icon',
       ),
       shape: const RoundedRectangleBorder(),
       trailing: ValueListenableBuilder<Color?>(
@@ -30,27 +31,18 @@ class ColorPickerField extends HookConsumerWidget {
         },
       ),
       children: <Widget>[
-        Wrap(
-          children: Colors.primaries
-              .map(
-                (MaterialColor color) => InkWell(
-                  onTap: () {
-                    pickedColor.value = color;
-                    form.control('colorHex').value = color.toHexString();
-                    expansionController.collapse();
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.all(4),
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: color,
-                    ),
-                  ),
-                ),
-              )
-              .toList(),
+        EmojiPicker(
+          onEmojiSelected: (Category? category, Emoji emoji) {
+            //
+          },
+          config: Config(
+            emojiViewConfig: EmojiViewConfig(
+              emojiSizeMax: 28 *
+                  (foundation.defaultTargetPlatform == TargetPlatform.iOS
+                      ? 1.20
+                      : 1.0),
+            ),
+          ),
         ),
       ],
     );

@@ -8,6 +8,7 @@ import '../../../../core/data/entities/activity_entity.dart';
 import '../../../../core/data/models/activity.dart';
 import '../../../home/presentation/providers/activity_provider.dart';
 import '../widgets/color_field.dart';
+import '../widgets/icon_field.dart';
 import '../widgets/productivity_field.dart';
 
 class ActivityScreen extends ConsumerWidget {
@@ -85,6 +86,7 @@ class ActivityScreen extends ConsumerWidget {
                   },
                 ),
                 ColorPickerField(form: form),
+                IconPickerField(form: form),
                 ProductivityLvlField(form: form),
                 ReactiveTextField<String>(
                   formControlName: 'description',

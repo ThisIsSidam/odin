@@ -7,6 +7,11 @@ ThemeData getLightTheme(ColorScheme colorScheme) => ThemeData(
       bottomSheetTheme: const BottomSheetThemeData(
         modalBarrierColor: Colors.black38,
       ),
+      inputDecorationTheme: const InputDecorationTheme(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+      ),
       appBarTheme: const AppBarTheme(
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
@@ -21,6 +26,11 @@ ThemeData getDarkTheme(ColorScheme colorScheme) => ThemeData(
       colorScheme: colorScheme,
       bottomSheetTheme: const BottomSheetThemeData(
         modalBarrierColor: Colors.white38,
+      ),
+      inputDecorationTheme: const InputDecorationTheme(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
       ),
       appBarTheme: const AppBarTheme(
         systemOverlayStyle: SystemUiOverlayStyle(
