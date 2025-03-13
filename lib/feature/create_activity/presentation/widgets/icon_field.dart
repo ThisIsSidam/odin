@@ -1,5 +1,3 @@
-import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
-import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -30,21 +28,6 @@ class IconPickerField extends HookConsumerWidget {
           );
         },
       ),
-      children: <Widget>[
-        EmojiPicker(
-          onEmojiSelected: (Category? category, Emoji emoji) {
-            //
-          },
-          config: Config(
-            emojiViewConfig: EmojiViewConfig(
-              emojiSizeMax: 28 *
-                  (foundation.defaultTargetPlatform == TargetPlatform.iOS
-                      ? 1.20
-                      : 1.0),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

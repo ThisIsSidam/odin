@@ -7,6 +7,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../../../../core/data/entities/activity_entity.dart';
 import '../../../../core/data/models/activity.dart';
 import '../../../home/presentation/providers/activity_provider.dart';
+import '../providers/focus_provider.dart';
 import '../widgets/color_field.dart';
 import '../widgets/icon_field.dart';
 import '../widgets/productivity_field.dart';
@@ -43,6 +44,8 @@ class ActivityScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final ActivityFocusedWidget focusedWidget =
+        ref.watch(focusedWidgetNotifierProvider);
     final Activity? activity = id != null
         ? ref.read(activityNotifierProvider.notifier).getActivity(id!)
         : null;
@@ -72,40 +75,60 @@ class ActivityScreen extends ConsumerWidget {
               FormGroup form,
               Widget? child,
             ) =>
-                Column(
-              spacing: 16,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                ReactiveTextField<String>(
-                  formControlName: 'name',
-                  decoration: const InputDecoration(
-                    labelText: 'Name',
+                AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: switch (focusedWidget) {
+                ActivityFocusedWidget.none => _buildFullBody(
+                    context,
+                    ref,
+                    form,
                   ),
-                  validationMessages: <String, String Function(dynamic error)>{
-                    'required': (_) => 'Please enter an activity name',
-                  },
-                ),
-                ColorPickerField(form: form),
-                IconPickerField(form: form),
-                ProductivityLvlField(form: form),
-                ReactiveTextField<String>(
-                  formControlName: 'description',
-                  decoration: const InputDecoration(
-                    labelText: 'Description (Optional)',
-                  ),
-                  maxLines: 3,
-                ),
-                ElevatedButton(
-                  onPressed: () => saveActivity(context, ref, form),
-                  child: Text(
-                    id == null ? 'Create Activity' : 'Save Activiy',
-                  ),
-                ),
-              ],
+                ActivityFocusedWidget.colorPicker =>
+                  ColorPickerField(form: form),
+                ActivityFocusedWidget.iconPicker => IconPickerField(form: form),
+              },
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildFullBody(
+    BuildContext context,
+    WidgetRef ref,
+    FormGroup form,
+  ) {
+    return Column(
+      spacing: 16,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        ReactiveTextField<String>(
+          formControlName: 'name',
+          decoration: const InputDecoration(
+            labelText: 'Name',
+          ),
+          validationMessages: <String, String Function(dynamic error)>{
+            'required': (_) => 'Please enter an activity name',
+          },
+        ),
+        ColorPickerField(form: form),
+        IconPickerField(form: form),
+        ProductivityLvlField(form: form),
+        ReactiveTextField<String>(
+          formControlName: 'description',
+          decoration: const InputDecoration(
+            labelText: 'Description (Optional)',
+          ),
+          maxLines: 3,
+        ),
+        ElevatedButton(
+          onPressed: () => saveActivity(context, ref, form),
+          child: Text(
+            id == null ? 'Create Activity' : 'Save Activiy',
+          ),
+        ),
+      ],
     );
   }
 }
