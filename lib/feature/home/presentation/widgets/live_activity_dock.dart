@@ -87,13 +87,6 @@ class LiveActivityCard extends ConsumerWidget {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          // IconButton.filled(
-          //   onPressed: () {
-          //     // TODO: Implement pause
-          //   },
-          //   icon: const Icon(Icons.pause),
-          // ),
-          // const SizedBox(width: 8),
           IconButton.filled(
             onPressed: () {
               ref.read(liveActivityNotifierProvider.notifier).stopActivity(

@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 
+import '../../../../core/data/entities/activity_entity.dart';
+import '../providers/activity_fields_provider.dart';
 import '../providers/focus_provider.dart';
 
 class ColorPickerField extends HookConsumerWidget {
-  const ColorPickerField({required this.form, super.key});
-  final FormGroup form;
+  const ColorPickerField({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ActivityFocusedWidget focused =
         ref.watch(focusedWidgetNotifierProvider);
 
-    final ValueNotifier<Color?> pickedColor = useValueNotifier<Color?>(
-      (form.control('colorHex').value as String?)?.toColor(),
+    final String? pickedColor = ref.watch(
+      activityFieldsNotifierProvider.select((ActivityEntity a) => a.colorHex),
     );
 
     return Column(
@@ -32,14 +31,9 @@ class ColorPickerField extends HookConsumerWidget {
             }
           },
           title: const Text('Color'),
-          trailing: ValueListenableBuilder<Color?>(
-            valueListenable: pickedColor,
-            builder: (BuildContext context, Color? color, Widget? child) {
-              return Icon(
-                Icons.color_lens,
-                color: color,
-              );
-            },
+          trailing: Icon(
+            Icons.color_lens,
+            color: pickedColor?.toColor(),
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
@@ -52,8 +46,9 @@ class ColorPickerField extends HookConsumerWidget {
                 .map(
                   (MaterialColor color) => InkWell(
                     onTap: () {
-                      pickedColor.value = color;
-                      form.control('colorHex').value = color.toHexString();
+                      ref
+                          .read(activityFieldsNotifierProvider.notifier)
+                          .colorHex = color.toHexString();
                     },
                     child: Container(
                       margin: const EdgeInsets.all(4),

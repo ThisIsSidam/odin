@@ -8,6 +8,7 @@ import '../../../../core/exceptions/limitations.dart';
 import '../../../../router/app_routes.dart';
 import '../../../../shared/riverpod_widgets/state_selecter.dart';
 import '../../../../shared/utils/app_utils.dart';
+import '../../../create_activity/presentation/providers/activity_fields_provider.dart';
 import '../../data/models/live_activity.dart';
 import '../providers/activity_provider.dart';
 import '../providers/live_activity_provider.dart';
@@ -51,6 +52,7 @@ class HomeScreen extends ConsumerWidget {
               label: const Text('Add Activity'),
               avatar: const Icon(Icons.add),
               onPressed: () {
+                ref.read(activityFieldsNotifierProvider.notifier).clearState();
                 Navigator.pushNamed(context, AppRoutes.activity.path);
               },
             ),
@@ -129,10 +131,12 @@ class ActivityButton extends ConsumerWidget {
         ),
         onPressed: () => isRunning ? stopActivity(ref) : startActivity(ref),
         onLongPress: () {
+          ref
+              .read(activityFieldsNotifierProvider.notifier)
+              .updateActivityState = activity.toEntity;
           Navigator.pushNamed(
             context,
             AppRoutes.activity.path,
-            arguments: activity.id.toString(),
           );
         },
         child: Text(activity.name),

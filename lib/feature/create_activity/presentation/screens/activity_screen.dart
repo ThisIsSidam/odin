@@ -1,57 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 
 // import '../../../../core/extensions/color_ext.dart';
 import '../../../../core/data/entities/activity_entity.dart';
 import '../../../../core/data/models/activity.dart';
 import '../../../home/presentation/providers/activity_provider.dart';
+import '../providers/activity_fields_provider.dart';
 import '../providers/focus_provider.dart';
 import '../widgets/color_field.dart';
 import '../widgets/icon_field.dart';
 import '../widgets/productivity_field.dart';
 
 class ActivityScreen extends ConsumerWidget {
-  const ActivityScreen({this.id, super.key});
-
-  final int? id;
-
-  FormGroup buildForm(Activity? activity) => fb.group(<String, List<Object?>>{
-        'name': <void>[activity?.name ?? '', Validators.required],
-        'description': <String>[activity?.description ?? ''],
-        'productivityLvl': <int>[activity?.productivityLevel ?? 3],
-        'colorHex': <void>[activity?.color?.toHexString()],
-      });
-
-  void saveActivity(
-    BuildContext context,
-    WidgetRef ref,
-    FormGroup form,
-  ) {
-    if (form.valid) {
-      final ActivityEntity newActivity = ActivityEntity(
-        id: id ?? 0,
-        name: form.control('name').value as String,
-        description: form.control('description').value as String,
-        productivityLevel: form.control('productivityLvl').value as int,
-        colorHex: form.control('colorHex').value as String?,
-      );
-      ref.read(activityNotifierProvider.notifier).createActivity(newActivity);
-      Navigator.of(context).pop();
-    }
-  }
+  const ActivityScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final int id = ref.watch(
+      activityFieldsNotifierProvider.select((ActivityEntity a) => a.id),
+    );
     final ActivityFocusedWidget focusedWidget =
         ref.watch(focusedWidgetNotifierProvider);
-    final Activity? activity = id != null
-        ? ref.read(activityNotifierProvider.notifier).getActivity(id!)
-        : null;
+    final Activity? activity = id == 0
+        ? null
+        : ref.read(activityNotifierProvider.notifier).getActivity(id);
     return Scaffold(
       appBar: AppBar(
-        title: Text(id == null ? 'Create Activity' : 'Edit Activiy'),
+        title: Text(id == 0 ? 'Create Activity' : 'Edit Activiy'),
         actions: <Widget>[
           if (activity != null)
             IconButton(
@@ -68,26 +44,17 @@ class ActivityScreen extends ConsumerWidget {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
-          child: ReactiveFormBuilder(
-            form: () => buildForm(activity),
-            builder: (
-              BuildContext context,
-              FormGroup form,
-              Widget? child,
-            ) =>
-                AnimatedSwitcher(
-              duration: const Duration(milliseconds: 300),
-              child: switch (focusedWidget) {
-                ActivityFocusedWidget.none => _buildFullBody(
-                    context,
-                    ref,
-                    form,
-                  ),
-                ActivityFocusedWidget.colorPicker =>
-                  ColorPickerField(form: form),
-                ActivityFocusedWidget.iconPicker => IconPickerField(form: form),
-              },
-            ),
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            child: switch (focusedWidget) {
+              ActivityFocusedWidget.none => _buildFullBody(
+                  context,
+                  ref,
+                  id,
+                ),
+              ActivityFocusedWidget.colorPicker => const ColorPickerField(),
+              ActivityFocusedWidget.iconPicker => const IconPickerField(),
+            },
           ),
         ),
       ),
@@ -97,38 +64,86 @@ class ActivityScreen extends ConsumerWidget {
   Widget _buildFullBody(
     BuildContext context,
     WidgetRef ref,
-    FormGroup form,
+    int id,
   ) {
     return Column(
       spacing: 16,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        ReactiveTextField<String>(
-          formControlName: 'name',
-          decoration: const InputDecoration(
-            labelText: 'Name',
-          ),
-          validationMessages: <String, String Function(dynamic error)>{
-            'required': (_) => 'Please enter an activity name',
-          },
-        ),
-        ColorPickerField(form: form),
-        IconPickerField(form: form),
-        ProductivityLvlField(form: form),
-        ReactiveTextField<String>(
-          formControlName: 'description',
-          decoration: const InputDecoration(
-            labelText: 'Description (Optional)',
-          ),
-          maxLines: 3,
-        ),
+        const TitleField(),
+        const ColorPickerField(),
+        // IconPickerField(form: form),
+        const ProductivityLvlField(),
+        const DescriptionField(),
         ElevatedButton(
-          onPressed: () => saveActivity(context, ref, form),
+          onPressed: () {
+            final ActivityEntity newActivity =
+                ref.read(activityFieldsNotifierProvider);
+            ref
+                .read(activityNotifierProvider.notifier)
+                .createActivity(newActivity);
+            Navigator.of(context).pop();
+          },
           child: Text(
-            id == null ? 'Create Activity' : 'Save Activiy',
+            id == 0 ? 'Create Activity' : 'Save Activiy',
           ),
         ),
       ],
+    );
+  }
+}
+
+class TitleField extends HookConsumerWidget {
+  const TitleField({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final TextEditingController controller = useTextEditingController();
+
+    final String name = ref.read(
+      activityFieldsNotifierProvider.select((ActivityEntity a) => a.name),
+    );
+
+    useEffect(
+      () {
+        controller.text = name;
+        return null;
+      },
+      <Object?>[name],
+    );
+
+    return TextField(
+      controller: controller,
+      decoration: const InputDecoration(
+        labelText: 'Name',
+      ),
+      onChanged: (String value) {
+        ref.read(activityFieldsNotifierProvider.notifier).name = value;
+      },
+    );
+  }
+}
+
+class DescriptionField extends HookConsumerWidget {
+  const DescriptionField({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final String? description = ref.read(
+      activityFieldsNotifierProvider
+          .select((ActivityEntity a) => a.description),
+    );
+    final TextEditingController controller =
+        useTextEditingController(text: description);
+
+    return TextField(
+      controller: controller,
+      decoration: const InputDecoration(
+        labelText: 'Description (Optional)',
+      ),
+      onChanged: (String value) {
+        ref.read(activityFieldsNotifierProvider.notifier).description = value;
+      },
     );
   }
 }

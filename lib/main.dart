@@ -64,7 +64,6 @@ class MyApp extends ConsumerWidget {
             home: const DashboardScreen(),
             themeMode: theme,
             routes: routeBuilder(),
-            onGenerateRoute: onGenerateRoute,
             theme: getLightTheme(lightColorScheme),
             darkTheme: getDarkTheme(darkColorScheme),
           ),

@@ -32,4 +32,22 @@ class ActivityEntity {
       hidden: hidden,
     );
   }
+
+  ActivityEntity copyWith({
+    int? id,
+    String? name,
+    String? description,
+    int? productivityLevel,
+    String? colorHex,
+    bool? hidden,
+  }) {
+    return ActivityEntity(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      productivityLevel: productivityLevel ?? this.productivityLevel,
+      colorHex: colorHex ?? this.colorHex,
+      hidden: hidden ?? this.hidden,
+    );
+  }
 }

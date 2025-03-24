@@ -1,41 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:reactive_forms/reactive_forms.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class ProductivityLvlField extends HookWidget {
-  const ProductivityLvlField({required this.form, super.key});
-  final FormGroup form;
+import '../../../../core/data/entities/activity_entity.dart';
+import '../providers/activity_fields_provider.dart';
+
+class ProductivityLvlField extends HookConsumerWidget {
+  const ProductivityLvlField({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final ValueNotifier<int> lvlNotifier =
-        useState<int>(form.control('productivityLvl').value as int? ?? 3);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final int level = ref.watch(
+      activityFieldsNotifierProvider
+          .select((ActivityEntity a) => a.productivityLevel),
+    );
+
     return ListTile(
       title: const Text('Productivity level'),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          IconButton.filled(
-            onPressed: lvlNotifier.value > 1
-                ? () {
-                    lvlNotifier.value -= 1;
-                    form.control('productivityLvl').value = lvlNotifier.value;
-                  }
+          IconButton(
+            icon: const Icon(Icons.remove),
+            onPressed: level > 1
+                ? () => ref
+                    .read(activityFieldsNotifierProvider.notifier)
+                    .productivityLevel = level - 1
                 : null,
-            icon: const Icon(Icons.chevron_left),
           ),
-          SizedBox(
-            width: 50,
-            child: Center(child: Text(lvlNotifier.value.toString())),
-          ),
-          IconButton.filled(
-            onPressed: lvlNotifier.value < 10
-                ? () {
-                    lvlNotifier.value += 1;
-                    form.control('productivityLvl').value = lvlNotifier.value;
-                  }
+          Text('$level'),
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: level < 5
+                ? () => ref
+                    .read(activityFieldsNotifierProvider.notifier)
+                    .productivityLevel = level + 1
                 : null,
-            icon: const Icon(Icons.chevron_right),
           ),
         ],
       ),
