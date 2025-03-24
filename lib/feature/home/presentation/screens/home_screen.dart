@@ -8,7 +8,7 @@ import '../../../../core/exceptions/limitations.dart';
 import '../../../../router/app_routes.dart';
 import '../../../../shared/riverpod_widgets/state_selecter.dart';
 import '../../../../shared/utils/app_utils.dart';
-import '../../../create_activity/presentation/providers/activity_fields_provider.dart';
+import '../../../activity/presentation/providers/activity_fields_provider.dart';
 import '../../data/models/live_activity.dart';
 import '../providers/activity_provider.dart';
 import '../providers/live_activity_provider.dart';
