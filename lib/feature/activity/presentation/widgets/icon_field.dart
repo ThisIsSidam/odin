@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_icons_catalog/flutter_icons_catalog.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../providers/focus_provider.dart';
@@ -13,6 +14,9 @@ class IconPickerField extends HookConsumerWidget {
         ref.watch(focusedWidgetNotifierProvider);
     final ValueNotifier<IconData?> pickedIcon =
         useValueNotifier<IconData?>(null);
+    final List<IconData> icons = useMemoized(
+      () => IconsCatalog().getIconDataList(includeVariants: false),
+    );
 
     return Column(
       children: <Widget>[
@@ -23,7 +27,7 @@ class IconPickerField extends HookConsumerWidget {
                   ActivityFocusedWidget.none;
             } else {
               ref.read(focusedWidgetNotifierProvider.notifier).changeFocus =
-                  ActivityFocusedWidget.colorPicker;
+                  ActivityFocusedWidget.iconPicker;
             }
           },
           title: const Text('Icon'),
@@ -48,21 +52,24 @@ class IconPickerField extends HookConsumerWidget {
           ),
         ),
         if (focused == ActivityFocusedWidget.iconPicker)
-          GridView.builder(
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 50,
+          Expanded(
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 75,
+              ),
+              itemBuilder: (BuildContext context, int index) {
+                final IconData icon = icons[index];
+                return InkWell(
+                  onTap: () {
+                    // ref
+                    //         .read(activityFieldsNotifierProvider.notifier)
+                    //         . = color.toHexString();
+                    Navigator.pop(context);
+                  },
+                  child: Icon(icon, size: 36),
+                );
+              },
             ),
-            itemBuilder: (BuildContext context, int index) {
-              return const SizedBox();
-              // final IconData icon = icons[index];
-              // return InkWell(
-              //   onTap: () {
-              //     setState(() => _selectedIcon = icon);
-              //     Navigator.pop(context);
-              //   },
-              //   child: Icon(icon, size: 32),
-              // );
-            },
           ),
       ],
     );

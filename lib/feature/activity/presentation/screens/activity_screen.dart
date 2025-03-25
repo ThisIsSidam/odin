@@ -43,19 +43,17 @@ class ActivityScreen extends ConsumerWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: SingleChildScrollView(
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            child: switch (focusedWidget) {
-              ActivityFocusedWidget.none => _buildFullBody(
-                  context,
-                  ref,
-                  id,
-                ),
-              ActivityFocusedWidget.colorPicker => const ColorPickerField(),
-              ActivityFocusedWidget.iconPicker => const IconPickerField(),
-            },
-          ),
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          child: switch (focusedWidget) {
+            ActivityFocusedWidget.none => _buildFullBody(
+                context,
+                ref,
+                id,
+              ),
+            ActivityFocusedWidget.colorPicker => const ColorPickerField(),
+            ActivityFocusedWidget.iconPicker => const IconPickerField(),
+          },
         ),
       ),
     );
@@ -72,7 +70,7 @@ class ActivityScreen extends ConsumerWidget {
       children: <Widget>[
         const TitleField(),
         const ColorPickerField(),
-        // IconPickerField(form: form),
+        const IconPickerField(),
         const ProductivityLvlField(),
         const DescriptionField(),
         ElevatedButton(

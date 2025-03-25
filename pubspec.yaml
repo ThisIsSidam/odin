@@ -39,6 +39,8 @@ dependencies:
     sdk: flutter
   flutter_colorpicker: ^1.1.0
   flutter_hooks: ^0.20.5
+  flutter_icons_catalog:
+    git: https://github.com/ThisIsSidam/flutter_icons_catalog/
   flutter_riverpod: ^2.6.1
   hooks_riverpod: ^2.6.1
   intl: ^0.19.0

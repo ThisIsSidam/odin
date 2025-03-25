@@ -299,6 +299,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.20.5"
+  flutter_icons_catalog:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "64a50f5cdf66a3bf4ed8bd00c752ff5b7f41a927"
+      url: "https://github.com/ThisIsSidam/flutter_icons_catalog/"
+    source: git
+    version: "0.0.1"
   flutter_lints:
     dependency: "direct dev"
     description:
