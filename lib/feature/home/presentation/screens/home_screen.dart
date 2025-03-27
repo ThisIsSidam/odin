@@ -53,6 +53,7 @@ class HomeScreen extends ConsumerWidget {
             ActionChip(
               label: const Text('Add Activity'),
               avatar: const Icon(Icons.add),
+              labelPadding: const EdgeInsets.all(8),
               onPressed: () {
                 ref.read(activityFieldsNotifierProvider.notifier).clearState();
                 Navigator.pushNamed(context, AppRoutes.activity.path);

@@ -54,7 +54,7 @@ class IconPickerField extends HookConsumerWidget {
                     ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
-                side: const BorderSide(color: Colors.grey),
+                side: BorderSide(color: Theme.of(context).colorScheme.outline),
               ),
             ),
             if (focused == ActivityFocusedWidget.iconPicker)
@@ -63,6 +63,7 @@ class IconPickerField extends HookConsumerWidget {
                   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 75,
                   ),
+                  padding: const EdgeInsets.symmetric(vertical: 8),
                   itemBuilder: (BuildContext context, int index) {
                     final IconData icon = icons[index];
                     return Padding(

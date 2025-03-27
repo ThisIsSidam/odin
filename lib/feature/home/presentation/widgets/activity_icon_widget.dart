@@ -47,7 +47,7 @@ class ActivityIconWidget extends ConsumerWidget {
       );
     }
     return Container(
-      margin: const EdgeInsets.all(8),
+      margin: const EdgeInsets.all(4),
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: backgroundColor,

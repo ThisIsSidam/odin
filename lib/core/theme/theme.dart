@@ -7,9 +7,16 @@ ThemeData getLightTheme(ColorScheme colorScheme) => ThemeData(
       bottomSheetTheme: const BottomSheetThemeData(
         modalBarrierColor: Colors.black38,
       ),
-      inputDecorationTheme: const InputDecorationTheme(
+      inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8)),
+          borderSide: BorderSide(color: colorScheme.outline),
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: colorScheme.primary,
+          foregroundColor: colorScheme.onPrimary,
         ),
       ),
       appBarTheme: const AppBarTheme(
@@ -27,9 +34,16 @@ ThemeData getDarkTheme(ColorScheme colorScheme) => ThemeData(
       bottomSheetTheme: const BottomSheetThemeData(
         modalBarrierColor: Colors.white38,
       ),
-      inputDecorationTheme: const InputDecorationTheme(
+      inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8)),
+          borderSide: BorderSide(color: colorScheme.outline),
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: colorScheme.primary,
+          foregroundColor: colorScheme.onPrimary,
         ),
       ),
       appBarTheme: const AppBarTheme(

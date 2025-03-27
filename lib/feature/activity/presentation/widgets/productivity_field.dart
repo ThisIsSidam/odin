@@ -16,6 +16,10 @@ class ProductivityLvlField extends HookConsumerWidget {
 
     return ListTile(
       title: const Text('Productivity level'),
+      shape: OutlineInputBorder(
+        borderSide: BorderSide(color: Theme.of(context).colorScheme.outline),
+        borderRadius: BorderRadius.circular(8),
+      ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -27,7 +31,7 @@ class ProductivityLvlField extends HookConsumerWidget {
                     .productivityLevel = level - 1
                 : null,
           ),
-          Text('$level'),
+          Text('$level', style: Theme.of(context).textTheme.bodyMedium),
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: level < 5

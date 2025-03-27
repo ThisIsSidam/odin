@@ -39,31 +39,34 @@ class ColorPickerField extends HookConsumerWidget {
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
-            side: const BorderSide(color: Colors.grey),
+            side: BorderSide(color: Theme.of(context).colorScheme.outline),
           ),
         ),
         if (focused == ActivityFocusedWidget.colorPicker)
-          Wrap(
-            children: Colors.primaries
-                .map(
-                  (MaterialColor color) => InkWell(
-                    onTap: () {
-                      ref
-                          .read(activityFieldsNotifierProvider.notifier)
-                          .colorHex = color.toHexString();
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.all(4),
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: color,
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Wrap(
+              children: Colors.primaries
+                  .map(
+                    (MaterialColor color) => InkWell(
+                      onTap: () {
+                        ref
+                            .read(activityFieldsNotifierProvider.notifier)
+                            .colorHex = color.toHexString();
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.all(4),
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: color,
+                        ),
                       ),
                     ),
-                  ),
-                )
-                .toList(),
+                  )
+                  .toList(),
+            ),
           ),
       ],
     );
