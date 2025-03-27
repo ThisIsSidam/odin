@@ -1,4 +1,5 @@
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_icons_catalog/flutter_icons_catalog.dart';
 import 'package:objectbox/objectbox.dart';
 
 import '../models/activity.dart';
@@ -12,6 +13,8 @@ class ActivityEntity {
   int productivityLevel;
   String? colorHex;
   bool hidden;
+  int? iconType;
+  String? iconName;
 
   ActivityEntity({
     required this.name,
@@ -20,6 +23,8 @@ class ActivityEntity {
     this.productivityLevel = 1,
     this.colorHex,
     this.hidden = false,
+    this.iconType,
+    this.iconName,
   });
 
   Activity get toModel {
@@ -30,6 +35,11 @@ class ActivityEntity {
       productivityLevel: productivityLevel,
       color: colorHex?.toColor(),
       hidden: hidden,
+      icon: ActivityIcon(
+        iconType: iconType,
+        iconData:
+            iconName == null ? null : IconsCatalog().getIconData(iconName!),
+      ),
     );
   }
 
@@ -40,6 +50,8 @@ class ActivityEntity {
     int? productivityLevel,
     String? colorHex,
     bool? hidden,
+    int? iconType,
+    String? iconName,
   }) {
     return ActivityEntity(
       id: id ?? this.id,
@@ -48,6 +60,8 @@ class ActivityEntity {
       productivityLevel: productivityLevel ?? this.productivityLevel,
       colorHex: colorHex ?? this.colorHex,
       hidden: hidden ?? this.hidden,
+      iconType: iconType ?? this.iconType,
+      iconName: iconName ?? this.iconName,
     );
   }
 }

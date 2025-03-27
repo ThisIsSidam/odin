@@ -34,7 +34,7 @@ class ActivityLogEntity {
       id: id,
       startedAt: startedAt,
       stoppedAt: stoppedAt,
-      activity: activity.target?.toModel ?? Activity.notFound(),
+      activity: activity.target?.toModel ?? const Activity.notFound(),
       note: note,
     );
   }

@@ -14,8 +14,10 @@ class ColorPickerField extends HookConsumerWidget {
     final ActivityFocusedWidget focused =
         ref.watch(focusedWidgetNotifierProvider);
 
-    final String? pickedColor = ref.watch(
-      activityFieldsNotifierProvider.select((ActivityEntity a) => a.colorHex),
+    final Color? pickedColor = ref.watch(
+      activityFieldsNotifierProvider.select(
+        (ActivityEntity a) => a.colorHex?.toColor(),
+      ),
     );
 
     return Column(
@@ -33,7 +35,7 @@ class ColorPickerField extends HookConsumerWidget {
           title: const Text('Color'),
           trailing: Icon(
             Icons.color_lens,
-            color: pickedColor?.toColor(),
+            color: pickedColor,
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),

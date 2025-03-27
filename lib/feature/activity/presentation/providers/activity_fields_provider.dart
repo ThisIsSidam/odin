@@ -1,6 +1,8 @@
+import 'package:flutter_icons_catalog/flutter_icons_catalog.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/data/entities/activity_entity.dart';
+import '../../../../core/data/models/activity.dart';
 
 part 'generated/activity_fields_provider.g.dart';
 
@@ -38,6 +40,14 @@ class ActivityFieldsNotifier extends _$ActivityFieldsNotifier {
 
   set hidden(bool value) {
     state = state.copyWith(hidden: value);
+  }
+
+  set icon(ActivityIcon icon) {
+    state = state.copyWith(
+      iconType: icon.iconType,
+      iconName:
+          icon.iconData == null ? null : IconsCatalog().getName(icon.iconData!),
+    );
   }
 
   set updateActivityState(ActivityEntity activity) {
