@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../../core/data/entities/activity_entity.dart';
 import '../../../../core/data/models/activity.dart';
 import '../../../../shared/riverpod_widgets/state_selecter.dart';
+import '../../../home/presentation/widgets/activity_icon_widget.dart';
 import '../providers/activity_fields_provider.dart';
 import '../providers/focus_provider.dart';
 
@@ -22,19 +23,15 @@ class IconPickerField extends HookConsumerWidget {
       () => IconsCatalog().getIconDataList(includeVariants: false),
     );
 
-    return StateSelector<ActivityEntity, ({IconData? icon, Color? color})>(
+    return StateSelector<ActivityEntity, ({ActivityIcon? icon, Color? color})>(
       provider: activityFieldsNotifierProvider,
-      selector: (ActivityEntity a) => (
-        icon: a.iconName == null
-            ? null
-            : IconsCatalog().getIconData(
-                a.iconName!,
-              ),
-        color: a.colorHex?.toColor()
+      selector: (ActivityEntity entity) => (
+        icon: ActivityIcon.fromActivityEntity(entity: entity),
+        color: entity.colorHex?.toColor()
       ),
       builder: (
         BuildContext context,
-        ({Color? color, IconData? icon}) selected,
+        ({Color? color, ActivityIcon? icon}) selected,
       ) {
         return Column(
           children: <Widget>[
@@ -49,23 +46,12 @@ class IconPickerField extends HookConsumerWidget {
                 }
               },
               title: const Text('Icon'),
-              trailing: Container(
-                padding: const EdgeInsets.all(4),
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                ),
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: selected.color,
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: Icon(
-                    selected.icon ?? Icons.question_answer,
-                    color: Theme.of(context).colorScheme.surface,
-                  ),
-                ),
-              ),
+              trailing: selected.icon == null
+                  ? const SizedBox.shrink()
+                  : ActivityIconWidget(
+                      icon: selected.icon!,
+                      backgroundColor: selected.color,
+                    ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
                 side: const BorderSide(color: Colors.grey),
@@ -89,9 +75,16 @@ class IconPickerField extends HookConsumerWidget {
                             iconData: icon,
                           );
                         },
-                        icon: Icon(icon, size: 36),
+                        icon: Icon(
+                          icon,
+                          size: 36,
+                          color: Colors.white,
+                        ),
                         style: IconButton.styleFrom(
                           backgroundColor: selected.color,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
                       ),
                     );

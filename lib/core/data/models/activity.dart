@@ -70,13 +70,6 @@ class ActivityIcon {
   final int iconType;
   final IconData? iconData;
 
-  factory ActivityIcon({int? iconType, IconData? iconData}) {
-    if (iconType == 102 && iconData != null) {
-      return ActivityIcon.icon(iconData: iconData);
-    }
-    return const ActivityIcon.none();
-  }
-
   const ActivityIcon.none()
       : iconType = 101,
         iconData = null;
@@ -84,4 +77,18 @@ class ActivityIcon {
   const ActivityIcon.icon({
     required this.iconData,
   }) : iconType = 102;
+
+  factory ActivityIcon.fromActivityEntity({
+    required ActivityEntity entity,
+  }) {
+    if (entity.iconType == 102) {
+      if (entity.iconName == null) return const ActivityIcon.none();
+      final IconData? data = IconsCatalog().getIconData(entity.iconName!);
+      if (data == null) return const ActivityIcon.none();
+      return ActivityIcon.icon(iconData: data);
+    }
+    return const ActivityIcon.none();
+  }
+
+  bool get isIconData => iconType == 102 && iconData != null;
 }

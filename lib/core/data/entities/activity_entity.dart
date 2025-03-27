@@ -1,5 +1,4 @@
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:flutter_icons_catalog/flutter_icons_catalog.dart';
 import 'package:objectbox/objectbox.dart';
 
 import '../models/activity.dart';
@@ -35,11 +34,7 @@ class ActivityEntity {
       productivityLevel: productivityLevel,
       color: colorHex?.toColor(),
       hidden: hidden,
-      icon: ActivityIcon(
-        iconType: iconType,
-        iconData:
-            iconName == null ? null : IconsCatalog().getIconData(iconName!),
-      ),
+      icon: ActivityIcon.fromActivityEntity(entity: this),
     );
   }
 

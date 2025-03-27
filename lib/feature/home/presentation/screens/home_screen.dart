@@ -12,6 +12,7 @@ import '../../../activity/presentation/providers/activity_fields_provider.dart';
 import '../../data/models/live_activity.dart';
 import '../providers/activity_provider.dart';
 import '../providers/live_activity_provider.dart';
+import '../widgets/activity_icon_widget.dart';
 import '../widgets/live_activity_dock.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -46,6 +47,7 @@ class HomeScreen extends ConsumerWidget {
         alignment: Alignment.topCenter,
         child: Wrap(
           spacing: 8,
+          runSpacing: 8,
           alignment: WrapAlignment.center,
           children: <Widget>[
             ActionChip(
@@ -113,7 +115,7 @@ class ActivityButton extends ConsumerWidget {
           return e.activity == activity;
         });
       },
-      builder: (BuildContext context, bool isRunning) => ElevatedButton(
+      builder: (BuildContext context, bool isRunning) => ElevatedButton.icon(
         style: ElevatedButton.styleFrom(
           backgroundColor: isRunning
               ? Colors.transparent
@@ -139,7 +141,13 @@ class ActivityButton extends ConsumerWidget {
             AppRoutes.activity.path,
           );
         },
-        child: Text(activity.name),
+        label: Text(
+          activity.name,
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                color: Colors.white,
+              ),
+        ),
+        icon: ActivityIconWidget(icon: activity.icon),
       ),
     );
   }
