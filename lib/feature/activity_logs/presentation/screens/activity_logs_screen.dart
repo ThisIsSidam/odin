@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/extensions/datetime_ext.dart';
+import '../../../home/presentation/widgets/activity_icon_widget.dart';
 import '../../data/models/activity_log.dart';
 import '../providers/activity_logs_provider.dart';
 
@@ -70,10 +71,17 @@ class ActivityLogTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ListTile(
-      leading: const Icon(Icons.question_mark),
+      leading: ActivityIconWidget(
+        icon: log.activity.icon,
+        backgroundColor: log.activity.color,
+      ),
       title: Text(log.activity.name),
       subtitle: Text(log.startedAt.getDateRange(log.stoppedAt)),
-      trailing: Text(log.stoppedAt.difference(log.startedAt).pretty()),
+      trailing: Text(
+        log.stoppedAt.difference(log.startedAt).pretty(
+              abbreviated: true,
+            ),
+      ),
     );
   }
 }
