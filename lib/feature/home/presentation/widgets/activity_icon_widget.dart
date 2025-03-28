@@ -8,27 +8,31 @@ class ActivityIconWidget extends ConsumerWidget {
     required this.icon,
     this.onTap,
     this.backgroundColor,
+    this.foregroundColor,
     super.key,
   });
 
   final ActivityIcon icon;
   final VoidCallback? onTap;
   final Color? backgroundColor;
+  final Color? foregroundColor;
   static const double _kIconSize = 28;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final Color color =
+        foregroundColor ?? Theme.of(context).colorScheme.surface;
     late final Widget iconWidget;
     if (icon.isIconData) {
       iconWidget = Icon(
         icon.iconData,
-        color: Colors.white,
+        color: color,
         size: _kIconSize,
       );
     } else {
-      iconWidget = const Icon(
+      iconWidget = Icon(
         Icons.question_mark,
-        color: Colors.white,
+        color: color,
         size: _kIconSize,
       );
     }
@@ -38,7 +42,7 @@ class ActivityIconWidget extends ConsumerWidget {
         onPressed: onTap,
         icon: iconWidget,
         style: IconButton.styleFrom(
-          foregroundColor: Colors.white,
+          foregroundColor: color,
           backgroundColor: backgroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),

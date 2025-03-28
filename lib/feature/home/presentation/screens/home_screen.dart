@@ -108,6 +108,7 @@ class ActivityButton extends ConsumerWidget {
     if (activity.hidden) {
       return const SizedBox.shrink();
     }
+    final ThemeData theme = Theme.of(context);
 
     return StateSelector<List<LiveActivity>, bool>(
       provider: liveActivityNotifierProvider,
@@ -126,9 +127,9 @@ class ActivityButton extends ConsumerWidget {
             borderRadius: BorderRadius.circular(12),
             side: BorderSide(
               color: isRunning
-                  ? (activity.color ??
-                      Theme.of(context).colorScheme.primaryContainer)
+                  ? theme.colorScheme.inverseSurface
                   : Colors.transparent,
+              width: 2,
             ),
           ),
         ),
@@ -144,11 +145,18 @@ class ActivityButton extends ConsumerWidget {
         },
         label: Text(
           activity.name,
-          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                color: Colors.white,
-              ),
+          style: theme.textTheme.bodyMedium!.copyWith(
+            color: isRunning
+                ? theme.colorScheme.inverseSurface
+                : theme.colorScheme.surface,
+          ),
         ),
-        icon: ActivityIconWidget(icon: activity.icon),
+        icon: ActivityIconWidget(
+          icon: activity.icon,
+          foregroundColor: isRunning
+              ? theme.colorScheme.inverseSurface
+              : theme.colorScheme.surface,
+        ),
       ),
     );
   }

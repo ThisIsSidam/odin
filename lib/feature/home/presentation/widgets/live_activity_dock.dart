@@ -7,6 +7,7 @@ import '../../../../core/providers/global_providers.dart';
 import '../../../../shared/riverpod_widgets/state_selecter.dart';
 import '../../data/models/live_activity.dart';
 import '../providers/live_activity_provider.dart';
+import 'activity_icon_widget.dart';
 
 class LiveActivityDock extends ConsumerWidget {
   const LiveActivityDock({super.key});
@@ -21,19 +22,12 @@ class LiveActivityDock extends ConsumerWidget {
     if (liveActivities.isEmpty) return const SizedBox.shrink();
     return AnimatedContainer(
       width: size.width > 500 ? 500 : size.width - 16,
-      margin: const EdgeInsets.all(8),
+      margin: const EdgeInsets.all(12),
       padding: const EdgeInsets.all(8),
       duration: const Duration(milliseconds: 300),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.secondaryContainer,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: const <BoxShadow>[
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            spreadRadius: 2,
-          ),
-        ],
       ),
       child: _buildLists(context, liveActivities),
     );
@@ -61,8 +55,15 @@ class LiveActivityCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final ThemeData theme = Theme.of(context);
     final Activity? activity = live.activity;
     return ListTile(
+      leading: activity == null
+          ? null
+          : ActivityIconWidget(
+              icon: activity.icon,
+              backgroundColor: activity.color,
+            ),
       title: activity?.id == null
           ? Text(
               'Some activity',
@@ -93,7 +94,7 @@ class LiveActivityCard extends ConsumerWidget {
                     live.id,
                   );
             },
-            icon: const Icon(Icons.stop),
+            icon: Icon(Icons.stop, color: theme.colorScheme.surface),
           ),
         ],
       ),

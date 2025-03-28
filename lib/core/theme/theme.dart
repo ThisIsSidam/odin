@@ -19,6 +19,11 @@ ThemeData getLightTheme(ColorScheme colorScheme) => ThemeData(
           foregroundColor: colorScheme.onPrimary,
         ),
       ),
+      iconButtonTheme: IconButtonThemeData(
+        style: IconButton.styleFrom(
+          backgroundColor: colorScheme.onTertiaryContainer,
+        ),
+      ),
       appBarTheme: const AppBarTheme(
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
@@ -44,6 +49,11 @@ ThemeData getDarkTheme(ColorScheme colorScheme) => ThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: colorScheme.primary,
           foregroundColor: colorScheme.onPrimary,
+        ),
+      ),
+      iconButtonTheme: IconButtonThemeData(
+        style: IconButton.styleFrom(
+          backgroundColor: colorScheme.onTertiaryContainer,
         ),
       ),
       appBarTheme: const AppBarTheme(
