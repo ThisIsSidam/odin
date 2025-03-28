@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../activity_logs/presentation/screens/activity_logs_screen.dart';
 import '../../../settings/presentation/screens/settings.dart';
+import '../../../stats/presentation/screens/stat_screen.dart';
 import 'home_screen.dart';
 
 @immutable
@@ -13,10 +14,12 @@ class DashboardScreen extends HookConsumerWidget {
   Widget _currentScreen(int index) {
     switch (index) {
       case 0:
-        return const ActivityLogsScreen();
-      case 1:
         return const HomeScreen();
+      case 1:
+        return const ActivityLogsScreen();
       case 2:
+        return const StatScreen();
+      case 3:
         return const SettingsScreen();
       default:
         return const HomeScreen();
@@ -25,7 +28,7 @@ class DashboardScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ValueNotifier<int> currentScreen = useState<int>(1);
+    final ValueNotifier<int> currentScreen = useState<int>(0);
     return Scaffold(
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),
@@ -34,12 +37,16 @@ class DashboardScreen extends HookConsumerWidget {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.file_download_done_sharp),
             label: 'Logs',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: Icon(Icons.bar_chart),
+            label: 'Stats',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
