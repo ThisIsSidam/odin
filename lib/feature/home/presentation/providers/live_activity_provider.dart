@@ -65,7 +65,7 @@ class LiveActivityNotifier extends _$LiveActivityNotifier {
 
   /// Stops activity through an activity's live session's id
   void stopActivity(int id) {
-    ref.read(activityLogsNotifierProvider(null).notifier).addActivityLog(
+    ref.read(activityLogsNotifierProvider(null, null).notifier).addActivityLog(
           state.firstWhere((LiveActivity e) => e.id == id).toEntity,
         );
     final bool removed = _box.remove(id);

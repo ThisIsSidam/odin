@@ -15,8 +15,12 @@ class ActivityLogsScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ValueNotifier<DateTime> dateNotifier =
         useState<DateTime>(DateTime.now());
-    final List<ActivityLog> logs =
-        ref.watch(activityLogsNotifierProvider(dateNotifier.value));
+    final List<ActivityLog> logs = ref.watch(
+      activityLogsNotifierProvider(
+        dateNotifier.value,
+        dateNotifier.value.add(const Duration(days: 1)),
+      ),
+    );
     return Scaffold(
       appBar: AppBar(
         title: const Text('Activity logs'),

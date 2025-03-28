@@ -13,11 +13,11 @@ class ActivityLogsNotifier extends _$ActivityLogsNotifier {
   late Box<ActivityLogEntity> _box;
 
   @override
-  List<ActivityLog> build(DateTime? dt) {
+  List<ActivityLog> build(DateTime? fromTime, DateTime? toTime) {
     final Store store = ref.watch(objectboxStoreProvider);
     _box = store.box<ActivityLogEntity>();
-    _startListener(dt);
-    if (dt == null) {
+    _startListener(fromTime, toTime);
+    if (fromTime == null) {
       return _box
           .getAll()
           .map((ActivityLogEntity entity) => entity.toModel)
@@ -27,11 +27,15 @@ class ActivityLogsNotifier extends _$ActivityLogsNotifier {
         .query(
           ActivityLogEntity_.startedAt.betweenDate(
             DateTime(
-              dt.year,
-              dt.month,
-              dt.day,
+              fromTime.year,
+              fromTime.month,
+              fromTime.day,
             ),
-            DateTime(dt.year, dt.month, dt.day + 1),
+            DateTime(
+              (toTime ?? fromTime).year,
+              (toTime ?? fromTime).month,
+              toTime?.day ?? fromTime.day + 1,
+            ),
           ),
         )
         .build()
@@ -40,8 +44,8 @@ class ActivityLogsNotifier extends _$ActivityLogsNotifier {
         .toList();
   }
 
-  void _startListener(DateTime? dt) {
-    if (dt == null) {
+  void _startListener(DateTime? fromTime, DateTime? toTime) {
+    if (fromTime == null) {
       _box
           .query()
           .watch(triggerImmediately: true)
@@ -60,11 +64,15 @@ class ActivityLogsNotifier extends _$ActivityLogsNotifier {
         .query(
           ActivityLogEntity_.startedAt.betweenDate(
             DateTime(
-              dt.year,
-              dt.month,
-              dt.day,
+              fromTime.year,
+              fromTime.month,
+              fromTime.day,
             ),
-            DateTime(dt.year, dt.month, dt.day + 1),
+            DateTime(
+              (toTime ?? fromTime).year,
+              (toTime ?? fromTime).month,
+              toTime?.day ?? fromTime.day + 1,
+            ),
           ),
         )
         .watch(triggerImmediately: true)
