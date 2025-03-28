@@ -18,3 +18,10 @@ class MultiTaskingNotAllowedLimitation implements Limitation {
 
   MultiTaskingNotAllowedLimitation() : message = 'Multi-tasking is not allowed';
 }
+
+class NameRequiredLimitation implements Limitation {
+  @override
+  final String message;
+
+  NameRequiredLimitation() : message = 'Give name to the activity';
+}

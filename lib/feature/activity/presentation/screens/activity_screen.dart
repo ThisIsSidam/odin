@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:toastification/toastification.dart';
 
-// import '../../../../core/extensions/color_ext.dart';
 import '../../../../core/data/entities/activity_entity.dart';
 import '../../../../core/data/models/activity.dart';
+import '../../../../core/exceptions/limitations.dart';
+import '../../../../shared/utils/app_utils.dart';
 import '../../../home/presentation/providers/activity_provider.dart';
 import '../providers/activity_fields_provider.dart';
 import '../providers/focus_provider.dart';
@@ -14,6 +16,20 @@ import '../widgets/productivity_field.dart';
 
 class ActivityScreen extends ConsumerWidget {
   const ActivityScreen({super.key});
+
+  void onConfirm(BuildContext context, WidgetRef ref) {
+    try {
+      final ActivityEntity newActivity =
+          ref.read(activityFieldsNotifierProvider);
+      ref.read(activityNotifierProvider.notifier).createActivity(newActivity);
+      Navigator.of(context).pop();
+    } on NameRequiredLimitation catch (e) {
+      AppUtils.showToast(
+        msg: e.message,
+        style: ToastificationStyle.simple,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -74,14 +90,7 @@ class ActivityScreen extends ConsumerWidget {
         const ProductivityLvlField(),
         const DescriptionField(),
         ElevatedButton(
-          onPressed: () {
-            final ActivityEntity newActivity =
-                ref.read(activityFieldsNotifierProvider);
-            ref
-                .read(activityNotifierProvider.notifier)
-                .createActivity(newActivity);
-            Navigator.of(context).pop();
-          },
+          onPressed: () => onConfirm(context, ref),
           child: Text(
             id == 0 ? 'Create Activity' : 'Save Activiy',
           ),

@@ -2,6 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/data/entities/activity_entity.dart';
 import '../../../../core/data/models/activity.dart';
+import '../../../../core/exceptions/limitations.dart';
 import '../../../../core/providers/global_providers.dart';
 import '../../../../objectbox.g.dart';
 
@@ -36,6 +37,7 @@ class ActivityNotifier extends _$ActivityNotifier {
   }
 
   void createActivity(ActivityEntity activity) {
+    if (activity.name == '') throw NameRequiredLimitation();
     _box.put(activity);
   }
 
