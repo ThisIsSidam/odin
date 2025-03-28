@@ -68,3 +68,28 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 }
+
+class SettingTile extends StatelessWidget {
+  const SettingTile({
+    required this.title,
+    this.leading,
+    this.trailing,
+    this.onTap,
+    super.key,
+  });
+
+  final String title;
+  final Icon? leading;
+  final Widget? trailing;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: leading,
+      title: Text(title, style: Theme.of(context).textTheme.titleMedium),
+      trailing: trailing ?? const Icon(Icons.chevron_right),
+      onTap: onTap,
+    );
+  }
+}
