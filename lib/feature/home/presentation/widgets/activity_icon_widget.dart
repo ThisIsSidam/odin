@@ -16,7 +16,7 @@ class ActivityIconWidget extends ConsumerWidget {
   final VoidCallback? onTap;
   final Color? backgroundColor;
   final Color? foregroundColor;
-  static const double _kIconSize = 28;
+  static const double _kIconSize = 22;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
