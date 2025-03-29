@@ -10,6 +10,8 @@ import '../../../../core/data/models/activity.dart';
 import '../../../activity_logs/presentation/providers/activity_logs_provider.dart';
 import '../../../home/presentation/providers/activity_provider.dart';
 import '../../../home/presentation/widgets/activity_icon_widget.dart';
+import '../widgets/date_range_mode_button.dart';
+import '../widgets/date_range_panel.dart';
 
 class StatScreen extends StatefulHookConsumerWidget {
   const StatScreen({super.key});
@@ -36,7 +38,11 @@ class _StatScreenState extends ConsumerState<StatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Statistics'),
+        actions: const <DateRangeModeButton>[
+          DateRangeModeButton(),
+        ],
       ),
+      bottomNavigationBar: const DateRangePanel(),
       body: Column(
         children: <Widget>[
           SizedBox(
