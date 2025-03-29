@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../core/data/models/activity.dart';
 import '../../../../core/providers/global_providers.dart';
 import '../../../../objectbox.g.dart';
 import '../../../home/data/entities/live_activity_entity.dart';
@@ -92,5 +93,25 @@ class ActivityLogsNotifier extends _$ActivityLogsNotifier {
     );
     log.activity.target = live.activity.target;
     _box.put(log);
+  }
+
+  Map<Activity, (Duration, double)> getStats() {
+    final Map<Activity, Duration> durations = <Activity, Duration>{};
+    Duration totalDuration = Duration.zero;
+
+    // Calculate durations and total
+    for (final ActivityLog log in state) {
+      final Duration dur = durations[log.activity] ?? Duration.zero;
+      durations[log.activity] = dur + log.duration;
+      totalDuration += log.duration;
+    }
+
+    // Convert to map with tuples containing duration and percentage
+    return durations.map((Activity key, Duration value) {
+      final double percentage = totalDuration.inSeconds > 0
+          ? value.inSeconds / totalDuration.inSeconds
+          : 0.0;
+      return MapEntry<Activity, (Duration, double)>(key, (value, percentage));
+    });
   }
 }

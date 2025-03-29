@@ -29,6 +29,8 @@ class ActivityLog {
   Activity activity;
   String? note;
 
+  Duration get duration => stoppedAt.difference(startedAt);
+
   ActivityLogEntity get toEntity {
     return ActivityLogEntity(
       id: id,

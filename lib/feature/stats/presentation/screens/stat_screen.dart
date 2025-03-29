@@ -1,258 +1,163 @@
+import 'dart:math';
+
+import 'package:duration/duration.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class StatScreen extends StatefulWidget {
+import '../../../../core/data/models/activity.dart';
+import '../../../activity_logs/presentation/providers/activity_logs_provider.dart';
+import '../../../home/presentation/providers/activity_provider.dart';
+import '../../../home/presentation/widgets/activity_icon_widget.dart';
+
+class StatScreen extends StatefulHookConsumerWidget {
   const StatScreen({super.key});
 
   @override
-  State<StatScreen> createState() => _StatScreenState();
+  ConsumerState<StatScreen> createState() => _StatScreenState();
 }
 
-class _StatScreenState extends State<StatScreen> {
+class _StatScreenState extends ConsumerState<StatScreen> {
   int touchedIndex = -1;
 
   @override
   Widget build(BuildContext context) {
+    final List<Activity> activities = ref.watch(activityNotifierProvider);
+    final Map<Activity, (Duration, double)> stats =
+        ref.watch(activityLogsNotifierProvider(null, null).notifier).getStats();
+    useMemoized(() {
+      activities.sort(
+        (Activity a, Activity b) =>
+            (stats[b]?.$2 ?? 0).compareTo(stats[a]?.$2 ?? 0),
+      );
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Statistics'),
       ),
-      body: AspectRatio(
-        aspectRatio: 1.3,
-        child: Column(
-          children: <Widget>[
-            const SizedBox(
-              height: 28,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Indicator(
-                  color: AppColors.contentColorBlue,
-                  text: 'One',
-                  isSquare: false,
-                  size: touchedIndex == 0 ? 18 : 16,
-                  textColor: touchedIndex == 0
-                      ? AppColors.mainTextColor1
-                      : AppColors.mainTextColor3,
+      body: Column(
+        children: <Widget>[
+          SizedBox(
+            height: max(MediaQuery.sizeOf(context).height * 0.35, 400),
+            child: PieChart(
+              PieChartData(
+                pieTouchData: PieTouchData(
+                  touchCallback: (
+                    FlTouchEvent event,
+                    PieTouchResponse? pieTouchResponse,
+                  ) {
+                    setState(() {
+                      if (!event.isInterestedForInteractions ||
+                          pieTouchResponse == null ||
+                          pieTouchResponse.touchedSection == null) {
+                        touchedIndex = -1;
+                        return;
+                      }
+                      touchedIndex =
+                          pieTouchResponse.touchedSection!.touchedSectionIndex;
+                    });
+                  },
                 ),
-                Indicator(
-                  color: AppColors.contentColorYellow,
-                  text: 'Two',
-                  isSquare: false,
-                  size: touchedIndex == 1 ? 18 : 16,
-                  textColor: touchedIndex == 1
-                      ? AppColors.mainTextColor1
-                      : AppColors.mainTextColor3,
+                startDegreeOffset: 180,
+                borderData: FlBorderData(
+                  show: false,
                 ),
-                Indicator(
-                  color: AppColors.contentColorPink,
-                  text: 'Three',
-                  isSquare: false,
-                  size: touchedIndex == 2 ? 18 : 16,
-                  textColor: touchedIndex == 2
-                      ? AppColors.mainTextColor1
-                      : AppColors.mainTextColor3,
-                ),
-                Indicator(
-                  color: AppColors.contentColorGreen,
-                  text: 'Four',
-                  isSquare: false,
-                  size: touchedIndex == 3 ? 18 : 16,
-                  textColor: touchedIndex == 3
-                      ? AppColors.mainTextColor1
-                      : AppColors.mainTextColor3,
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 18,
-            ),
-            Expanded(
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: PieChart(
-                  PieChartData(
-                    pieTouchData: PieTouchData(
-                      touchCallback: (
-                        FlTouchEvent event,
-                        PieTouchResponse? pieTouchResponse,
-                      ) {
-                        setState(() {
-                          if (!event.isInterestedForInteractions ||
-                              pieTouchResponse == null ||
-                              pieTouchResponse.touchedSection == null) {
-                            touchedIndex = -1;
-                            return;
-                          }
-                          touchedIndex = pieTouchResponse
-                              .touchedSection!.touchedSectionIndex;
-                        });
-                      },
-                    ),
-                    startDegreeOffset: 180,
-                    borderData: FlBorderData(
-                      show: false,
-                    ),
-                    sectionsSpace: 1,
-                    centerSpaceRadius: 0,
-                    sections: showingSections(),
-                  ),
-                ),
+                sectionsSpace: 1,
+                centerSpaceRadius: 0,
+                sections: showingSections(stats),
               ),
             ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.secondaryContainer,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: ListView.builder(
+                itemCount: activities.length,
+                padding: const EdgeInsets.all(8),
+                itemBuilder: (BuildContext context, int i) {
+                  final Activity activity = activities[i];
+                  final (Duration, double)? stat = stats[activity];
+                  return ActivityStatTile(
+                    activity: activity,
+                    percentage: stat?.$2 ?? 0,
+                    duration: stat?.$1 ?? Duration.zero,
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  List<PieChartSectionData> showingSections() {
-    return List<PieChartSectionData>.generate(
-      4,
-      (int i) {
-        final bool isTouched = i == touchedIndex;
-        const Color color0 = AppColors.contentColorBlue;
-        const Color color1 = AppColors.contentColorYellow;
-        const Color color2 = AppColors.contentColorPink;
-        const Color color3 = AppColors.contentColorGreen;
+  List<PieChartSectionData> showingSections(
+    Map<Activity, (Duration, double)> stats,
+  ) {
+    final List<PieChartSectionData> sections = <PieChartSectionData>[];
+    double othersValue = 0;
 
-        switch (i) {
-          case 0:
-            return PieChartSectionData(
-              color: color0,
-              value: 25,
-              title: '',
-              radius: 80,
-              titlePositionPercentageOffset: 0.55,
-              borderSide: isTouched
-                  ? const BorderSide(
-                      color: AppColors.contentColorWhite,
-                      width: 6,
-                    )
-                  : BorderSide(
-                      color: AppColors.contentColorWhite.withValues(alpha: 0),
-                    ),
-            );
-          case 1:
-            return PieChartSectionData(
-              color: color1,
-              value: 25,
-              title: '',
-              radius: 65,
-              titlePositionPercentageOffset: 0.55,
-              borderSide: isTouched
-                  ? const BorderSide(
-                      color: AppColors.contentColorWhite,
-                      width: 6,
-                    )
-                  : BorderSide(
-                      color: AppColors.contentColorWhite.withValues(alpha: 0),
-                    ),
-            );
-          case 2:
-            return PieChartSectionData(
-              color: color2,
-              value: 25,
-              title: '',
-              radius: 60,
-              titlePositionPercentageOffset: 0.6,
-              borderSide: isTouched
-                  ? const BorderSide(
-                      color: AppColors.contentColorWhite,
-                      width: 6,
-                    )
-                  : BorderSide(
-                      color: AppColors.contentColorWhite.withValues(alpha: 0),
-                    ),
-            );
-          case 3:
-            return PieChartSectionData(
-              color: color3,
-              value: 25,
-              title: '',
-              radius: 70,
-              titlePositionPercentageOffset: 0.55,
-              borderSide: isTouched
-                  ? const BorderSide(
-                      color: AppColors.contentColorWhite,
-                      width: 6,
-                    )
-                  : BorderSide(
-                      color: AppColors.contentColorWhite.withValues(alpha: 0),
-                    ),
-            );
-          default:
-            throw Error();
-        }
-      },
-    );
+    // Create sections for normal activities and sum up others in one pass
+    for (final Activity activity in stats.keys) {
+      final double value = stats[activity]?.$2 ?? 0;
+      if (value > 0.01) {
+        sections.add(
+          PieChartSectionData(
+            value: value,
+            color: activity.color,
+            radius: 150,
+            title: '${value.toStringAsFixed(2)}%',
+          ),
+        );
+      } else {
+        othersValue += value;
+      }
+    }
+
+    // Add "Others" section if there's any value
+    if (othersValue > 0.01) {
+      sections.add(
+        PieChartSectionData(
+          value: othersValue,
+          color: Colors.grey,
+          radius: 150,
+          title: 'Others\n${othersValue.toStringAsFixed(2)}%',
+        ),
+      );
+    }
+
+    return sections;
   }
 }
 
-class Indicator extends StatelessWidget {
-  const Indicator({
-    required this.color,
-    required this.text,
-    required this.isSquare,
+class ActivityStatTile extends ConsumerWidget {
+  const ActivityStatTile({
+    required this.activity,
+    required this.duration,
+    required this.percentage,
     super.key,
-    this.size = 16,
-    this.textColor,
   });
-  final Color color;
-  final String text;
-  final bool isSquare;
-  final double size;
-  final Color? textColor;
+
+  final Activity activity;
+  final Duration duration;
+  final double percentage;
 
   @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Container(
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            shape: isSquare ? BoxShape.rectangle : BoxShape.circle,
-            color: color,
-          ),
-        ),
-        const SizedBox(
-          width: 4,
-        ),
-        Text(
-          text,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: textColor,
-          ),
-        ),
-      ],
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ListTile(
+      leading: ActivityIconWidget(
+        icon: activity.icon,
+        backgroundColor: activity.color,
+      ),
+      title: Text(activity.name),
+      trailing: Text('${percentage.toStringAsFixed(2)}%'),
+      subtitle: Text(duration.pretty()),
     );
   }
-}
-
-class AppColors {
-  static const Color primary = contentColorCyan;
-  static const Color menuBackground = Color(0xFF090912);
-  static const Color itemsBackground = Color(0xFF1B2339);
-  static const Color pageBackground = Color(0xFF282E45);
-  static const Color mainTextColor1 = Colors.white;
-  static const Color mainTextColor2 = Colors.white70;
-  static const Color mainTextColor3 = Colors.white38;
-  static const Color mainGridLineColor = Colors.white10;
-  static const Color borderColor = Colors.white54;
-  static const Color gridLinesColor = Color(0x11FFFFFF);
-
-  static const Color contentColorBlack = Colors.black;
-  static const Color contentColorWhite = Colors.white;
-  static const Color contentColorBlue = Color(0xFF2196F3);
-  static const Color contentColorYellow = Color(0xFFFFC300);
-  static const Color contentColorOrange = Color(0xFFFF683B);
-  static const Color contentColorGreen = Color(0xFF3BFF49);
-  static const Color contentColorPurple = Color(0xFF6E1BFF);
-  static const Color contentColorPink = Color(0xFFFF3AF2);
-  static const Color contentColorRed = Color(0xFFE80054);
-  static const Color contentColorCyan = Color(0xFF50E4FF);
 }
