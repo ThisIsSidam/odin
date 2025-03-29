@@ -16,7 +16,7 @@ class ActivityIconWidget extends ConsumerWidget {
   final VoidCallback? onTap;
   final Color? backgroundColor;
   final Color? foregroundColor;
-  static const double _kIconSize = 22;
+  static const double _kIconSize = 24;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -50,14 +50,17 @@ class ActivityIconWidget extends ConsumerWidget {
         ),
       );
     }
-    return Container(
-      margin: const EdgeInsets.all(4),
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: iconWidget,
-    );
+
+    return backgroundColor == null
+        ? iconWidget
+        : Container(
+            margin: const EdgeInsets.all(4),
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: iconWidget,
+          );
   }
 }

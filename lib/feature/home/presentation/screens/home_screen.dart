@@ -50,14 +50,18 @@ class HomeScreen extends ConsumerWidget {
           runSpacing: 8,
           alignment: WrapAlignment.center,
           children: <Widget>[
-            ActionChip(
+            OutlinedButton.icon(
               label: const Text('Add Activity'),
-              avatar: const Icon(Icons.add),
-              labelPadding: const EdgeInsets.all(2),
+              icon: const Icon(Icons.add, size: 22),
               onPressed: () {
                 ref.read(activityFieldsNotifierProvider.notifier).clearState();
                 Navigator.pushNamed(context, AppRoutes.activity.path);
               },
+              style: OutlinedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
             ),
             ...activities.map(
               (Activity activity) => ActivityButton(
@@ -145,6 +149,7 @@ class ActivityButton extends ConsumerWidget {
         },
         label: Text(
           activity.name,
+          overflow: TextOverflow.ellipsis,
           style: theme.textTheme.bodyMedium!.copyWith(
             color: isRunning
                 ? theme.colorScheme.inverseSurface
