@@ -5,9 +5,14 @@ import 'date_range_provider.dart';
 part 'generated/range_mode_provider.g.dart';
 
 enum DateRangeMode {
-  daily,
-  weekly,
-  monthly,
+  daily('Daily'),
+  weekly('Weekly'),
+  monthly('Monthly'),
+  noRange('All'),
+  ;
+
+  const DateRangeMode(this.label);
+  final String label;
 }
 
 @riverpod
@@ -18,9 +23,19 @@ class RangeMode extends _$RangeMode {
   }
 
   set rangeMode(DateRangeMode mode) {
+    // Check whether the state had noRange, this would branch out the method
+    final bool wasNoRange = state == DateRangeMode.noRange;
+
     state = mode;
     final DateRangeNotifier dateRangeNotifier =
         ref.read(dateRangeNotifierProvider.notifier);
+
+    // If true, sets range provider state as newRange and ends execution
+    if (wasNoRange) {
+      dateRangeNotifier.setNewRange();
+      return;
+    }
+
     final DateTime currentDate = ref.read(dateRangeNotifierProvider).start;
 
     switch (mode) {
@@ -49,6 +64,8 @@ class RangeMode extends _$RangeMode {
           start: firstDay,
           end: lastDay,
         );
+      case DateRangeMode.noRange:
+        dateRangeNotifier.clearRange();
     }
   }
 }

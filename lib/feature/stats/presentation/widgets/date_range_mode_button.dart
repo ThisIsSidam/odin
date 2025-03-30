@@ -20,36 +20,19 @@ class DateRangeModeButton extends ConsumerWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text(_getModeText(currentMode)),
+            Text(currentMode.label),
             const Icon(Icons.arrow_drop_down),
           ],
         ),
       ),
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<DateRangeMode>>[
-        const PopupMenuItem<DateRangeMode>(
-          value: DateRangeMode.daily,
-          child: Text('Daily'),
-        ),
-        const PopupMenuItem<DateRangeMode>(
-          value: DateRangeMode.weekly,
-          child: Text('Weekly'),
-        ),
-        const PopupMenuItem<DateRangeMode>(
-          value: DateRangeMode.monthly,
-          child: Text('Monthly'),
-        ),
-      ],
+      itemBuilder: (BuildContext context) => DateRangeMode.values
+          .map(
+            (DateRangeMode e) => PopupMenuItem<DateRangeMode>(
+              value: e,
+              child: Text(e.label),
+            ),
+          )
+          .toList(),
     );
-  }
-
-  String _getModeText(DateRangeMode mode) {
-    switch (mode) {
-      case DateRangeMode.daily:
-        return 'Daily';
-      case DateRangeMode.weekly:
-        return 'Weekly';
-      case DateRangeMode.monthly:
-        return 'Monthly';
-    }
   }
 }

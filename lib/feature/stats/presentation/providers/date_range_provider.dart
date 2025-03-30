@@ -9,17 +9,37 @@ class DateRange {
   final DateTime end;
 
   const DateRange({required this.start, required this.end});
+
+  /// Not actually no range, the range is from epoch to 2300
+  DateRange.noRange()
+      : start = DateTime.fromMicrosecondsSinceEpoch(0),
+        end = DateTime(2300);
 }
 
 @riverpod
 class DateRangeNotifier extends _$DateRangeNotifier {
   @override
   DateRange build() {
+    return newRange;
+  }
+
+  /// A new range based on current datetime
+  DateRange get newRange {
     final DateTime now = DateTime.now();
     return DateRange(
       start: DateTime(now.year, now.month, now.day),
       end: DateTime(now.year, now.month, now.day + 1),
     );
+  }
+
+  /// Set state with newRange received from [newRange]
+  void setNewRange() {
+    state = newRange;
+  }
+
+  /// Set state as [DateRange.noRange]
+  void clearRange() {
+    state = DateRange.noRange();
   }
 
   void updateDateRange({DateTime? start, DateTime? end}) {
@@ -36,6 +56,8 @@ class DateRangeNotifier extends _$DateRangeNotifier {
         toLastWeek();
       case DateRangeMode.monthly:
         toLastMonth();
+      case DateRangeMode.noRange:
+        throw 'Button shoud not be present';
     }
   }
 
@@ -48,6 +70,8 @@ class DateRangeNotifier extends _$DateRangeNotifier {
         toNextWeek();
       case DateRangeMode.monthly:
         toNextMonth();
+      case DateRangeMode.noRange:
+        throw 'Button shoud not be present';
     }
   }
 
