@@ -1,8 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_icons_catalog/flutter_icons_catalog.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/data/entities/activity_entity.dart';
 import '../../../../core/data/models/activity.dart';
+import '../../../../core/extensions/list_ext.dart';
 
 part 'generated/activity_fields_provider.g.dart';
 
@@ -13,6 +16,7 @@ class ActivityFieldsNotifier extends _$ActivityFieldsNotifier {
     return ActivityEntity(
       name: '',
       description: null,
+      colorHex: (Colors.primaries.pickRandom ?? Colors.blue).toHexString(),
     );
   }
 
@@ -57,5 +61,6 @@ class ActivityFieldsNotifier extends _$ActivityFieldsNotifier {
   void clearState() => state = ActivityEntity(
         name: '',
         description: null,
+        colorHex: (Colors.primaries.pickRandom ?? Colors.blue).toHexString(),
       );
 }

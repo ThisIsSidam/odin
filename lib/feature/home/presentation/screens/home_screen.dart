@@ -123,10 +123,7 @@ class ActivityButton extends ConsumerWidget {
       },
       builder: (BuildContext context, bool isRunning) => ElevatedButton.icon(
         style: ElevatedButton.styleFrom(
-          backgroundColor: isRunning
-              ? Colors.transparent
-              : activity.color ??
-                  Theme.of(context).colorScheme.secondaryContainer,
+          backgroundColor: isRunning ? Colors.transparent : activity.color,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
             side: BorderSide(
