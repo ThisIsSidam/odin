@@ -81,17 +81,16 @@ class DateRangeNotifier extends _$DateRangeNotifier {
 
   void toLastMonth() {
     final DateTime startMonth =
-        DateTime(state.start.year, state.start.month - 1, state.start.day);
-    final DateTime endMonth =
-        DateTime(state.end.year, state.end.month - 1, state.end.day);
+        DateTime(state.start.year, state.start.month - 1);
+    final DateTime endMonth = DateTime(state.start.year, state.start.month, 0);
     state = DateRange(start: startMonth, end: endMonth);
   }
 
   void toNextMonth() {
     final DateTime startMonth =
-        DateTime(state.start.year, state.start.month + 1, state.start.day);
+        DateTime(state.start.year, state.start.month + 1);
     final DateTime endMonth =
-        DateTime(state.end.year, state.end.month + 1, state.end.day);
+        DateTime(state.start.year, state.start.month + 2, 0);
     state = DateRange(start: startMonth, end: endMonth);
   }
 }
