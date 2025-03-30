@@ -1,3 +1,5 @@
+import 'dart:isolate';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -7,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../../core/data/entities/activity_entity.dart';
 import '../../../../core/data/models/activity.dart';
 import '../../../../shared/riverpod_widgets/state_selecter.dart';
+import '../../../../shared/widgets/enhanced_widgets/enh_future_builder.dart';
 import '../../../home/presentation/widgets/activity_icon_widget.dart';
 import '../providers/activity_fields_provider.dart';
 import '../providers/focus_provider.dart';
@@ -19,8 +22,11 @@ class IconPickerField extends HookConsumerWidget {
     final ActivityFocusedWidget focused =
         ref.watch(focusedWidgetNotifierProvider);
 
-    final List<IconData> icons = useMemoized(
-      () => IconsCatalog().getIconDataList(includeVariants: false),
+    final Future<List<IconData>> iconsFuture = useMemoized(
+      () => Isolate.run(
+        () => IconsCatalog().getIconDataList(includeVariants: false),
+        debugName: 'IconsLoader',
+      ),
     );
 
     return StateSelector<ActivityEntity, ({ActivityIcon? icon, Color? color})>(
@@ -59,40 +65,62 @@ class IconPickerField extends HookConsumerWidget {
             ),
             if (focused == ActivityFocusedWidget.iconPicker)
               Expanded(
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 75,
+                child: EnhFutureBuilder<List<IconData>>(
+                  future: iconsFuture,
+                  loading: () => const Center(
+                    child: CircularProgressIndicator(),
                   ),
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  itemBuilder: (BuildContext context, int index) {
-                    final IconData icon = icons[index];
-                    return Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: IconButton.filled(
-                        onPressed: () {
-                          ref
-                              .read(activityFieldsNotifierProvider.notifier)
-                              .icon = ActivityIcon.icon(
-                            iconData: icon,
-                          );
-                        },
-                        icon: Icon(
-                          icon,
-                          size: 36,
-                          color: Colors.white,
-                        ),
-                        style: IconButton.styleFrom(
-                          backgroundColor: selected.color,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                      ),
-                    );
+                  error: (Object error, _) => Text(error.toString()),
+                  data: (List<IconData> icons) {
+                    if (icons.isEmpty) {
+                      return const Text('Empty');
+                    }
+                    return _buildIcons(ref, icons, selected);
                   },
                 ),
               ),
           ],
+        );
+      },
+    );
+  }
+
+  Widget _buildIcons(
+    WidgetRef ref,
+    List<IconData> icons,
+    ({Color? color, ActivityIcon? icon}) selected,
+  ) {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 75,
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      itemBuilder: (BuildContext context, int index) {
+        final IconData icon = icons[index];
+        return Padding(
+          padding: const EdgeInsets.all(8),
+          child: IconButton.filled(
+            onPressed: () {
+              ref
+                  .read(
+                    activityFieldsNotifierProvider.notifier,
+                  )
+                  .icon = ActivityIcon.icon(
+                iconData: icon,
+              );
+            },
+            icon: Icon(
+              icon,
+              size: 36,
+              color: Colors.white,
+            ),
+            style: IconButton.styleFrom(
+              backgroundColor: selected.color,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
         );
       },
     );
