@@ -7,9 +7,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/data/models/activity.dart';
+import '../../../../shared/widgets/app_elements/not_found_widget.dart';
 import '../../../activity_logs/presentation/providers/activity_logs_provider.dart';
 import '../../../home/presentation/providers/activity_provider.dart';
 import '../../../home/presentation/widgets/activity_icon_widget.dart';
+import '../providers/date_range_provider.dart';
 import '../widgets/date_range_mode_button.dart';
 import '../widgets/date_range_panel.dart';
 
@@ -26,8 +28,10 @@ class _StatScreenState extends ConsumerState<StatScreen> {
   @override
   Widget build(BuildContext context) {
     final List<Activity> activities = ref.watch(activityNotifierProvider);
-    final Map<Activity, (Duration, double)> stats =
-        ref.watch(activityLogsNotifierProvider(null, null).notifier).getStats();
+    final DateRange range = ref.watch(dateRangeNotifierProvider);
+    final Map<Activity, (Duration, double)> stats = ref
+        .watch(activityLogsNotifierProvider(range.start, range.end).notifier)
+        .getStats();
     useMemoized(() {
       activities.sort(
         (Activity a, Activity b) =>
@@ -43,63 +47,65 @@ class _StatScreenState extends ConsumerState<StatScreen> {
         ],
       ),
       bottomNavigationBar: const DateRangePanel(),
-      body: Column(
-        children: <Widget>[
-          SizedBox(
-            height: max(MediaQuery.sizeOf(context).height * 0.35, 400),
-            child: PieChart(
-              PieChartData(
-                pieTouchData: PieTouchData(
-                  touchCallback: (
-                    FlTouchEvent event,
-                    PieTouchResponse? pieTouchResponse,
-                  ) {
-                    setState(() {
-                      if (!event.isInterestedForInteractions ||
-                          pieTouchResponse == null ||
-                          pieTouchResponse.touchedSection == null) {
-                        touchedIndex = -1;
-                        return;
-                      }
-                      touchedIndex =
-                          pieTouchResponse.touchedSection!.touchedSectionIndex;
-                    });
-                  },
+      body: stats.isEmpty
+          ? const NotFoundWidget()
+          : Column(
+              children: <Widget>[
+                SizedBox(
+                  height: max(MediaQuery.sizeOf(context).height * 0.35, 400),
+                  child: PieChart(
+                    PieChartData(
+                      pieTouchData: PieTouchData(
+                        touchCallback: (
+                          FlTouchEvent event,
+                          PieTouchResponse? pieTouchResponse,
+                        ) {
+                          setState(() {
+                            if (!event.isInterestedForInteractions ||
+                                pieTouchResponse == null ||
+                                pieTouchResponse.touchedSection == null) {
+                              touchedIndex = -1;
+                              return;
+                            }
+                            touchedIndex = pieTouchResponse
+                                .touchedSection!.touchedSectionIndex;
+                          });
+                        },
+                      ),
+                      startDegreeOffset: 180,
+                      borderData: FlBorderData(
+                        show: false,
+                      ),
+                      sectionsSpace: 1,
+                      centerSpaceRadius: 0,
+                      sections: showingSections(stats),
+                    ),
+                  ),
                 ),
-                startDegreeOffset: 180,
-                borderData: FlBorderData(
-                  show: false,
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.secondaryContainer,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: ListView.builder(
+                      itemCount: activities.length,
+                      padding: const EdgeInsets.all(8),
+                      itemBuilder: (BuildContext context, int i) {
+                        final Activity activity = activities[i];
+                        final (Duration, double)? stat = stats[activity];
+                        return ActivityStatTile(
+                          activity: activity,
+                          percentage: stat?.$2 ?? 0,
+                          duration: stat?.$1 ?? Duration.zero,
+                        );
+                      },
+                    ),
+                  ),
                 ),
-                sectionsSpace: 1,
-                centerSpaceRadius: 0,
-                sections: showingSections(stats),
-              ),
+              ],
             ),
-          ),
-          Expanded(
-            child: Container(
-              margin: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.secondaryContainer,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: ListView.builder(
-                itemCount: activities.length,
-                padding: const EdgeInsets.all(8),
-                itemBuilder: (BuildContext context, int i) {
-                  final Activity activity = activities[i];
-                  final (Duration, double)? stat = stats[activity];
-                  return ActivityStatTile(
-                    activity: activity,
-                    percentage: stat?.$2 ?? 0,
-                    duration: stat?.$1 ?? Duration.zero,
-                  );
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 
