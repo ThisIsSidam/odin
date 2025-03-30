@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/extensions/datetime_ext.dart';
+import '../../../../shared/widgets/app_elements/not_found_widget.dart';
 import '../../../home/presentation/widgets/activity_icon_widget.dart';
 import '../../data/models/activity_log.dart';
 import '../providers/activity_logs_provider.dart';
@@ -26,7 +27,7 @@ class ActivityLogsScreen extends HookConsumerWidget {
         title: const Text('Activity logs'),
       ),
       body: logs.isEmpty
-          ? _buildEmptyScreen()
+          ? const NotFoundWidget()
           : ListView.builder(
               itemCount: logs.length,
               itemBuilder: (BuildContext context, int index) =>
@@ -57,12 +58,6 @@ class ActivityLogsScreen extends HookConsumerWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildEmptyScreen() {
-    return const Center(
-      child: Text('No logs found!'),
     );
   }
 }
