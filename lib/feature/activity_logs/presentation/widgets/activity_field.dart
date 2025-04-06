@@ -24,12 +24,15 @@ class ActivityField extends ConsumerWidget {
         ),
       ),
       child: ExpansionTile(
+        tilePadding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
         leading: ActivityIconWidget(
           icon: log.activity.icon,
-          backgroundColor: log.activity.color,
+          backgroundColor: log.activity.color ?? colorScheme.primary,
         ),
         title: Text(
-          log.activity.name,
+          log.activity == const Activity.notFound()
+              ? 'Select Activity'
+              : log.activity.name,
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),

@@ -60,6 +60,28 @@ class ActivityLogsScreen extends HookConsumerWidget {
           ],
         ),
       ),
+      floatingActionButton: const AddLogButton(),
+    );
+  }
+}
+
+class AddLogButton extends ConsumerWidget {
+  const AddLogButton({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return FloatingActionButton(
+      onPressed: () {
+        ref.read(logFieldsNotifierProvider.notifier).clearState();
+
+        Navigator.push(
+          context,
+          MaterialPageRoute<void>(
+            builder: (BuildContext context) => const LogScreen(),
+          ),
+        );
+      },
+      child: const Icon(Icons.add),
     );
   }
 }
