@@ -13,6 +13,7 @@ class LogScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final ActivityLog log = ref.watch(logFieldsNotifierProvider);
     return Scaffold(
       appBar: AppBar(
@@ -21,7 +22,7 @@ class LogScreen extends ConsumerWidget {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
-          spacing: 12,
+          spacing: 16,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             const ActivityField(),
@@ -44,13 +45,17 @@ class LogScreen extends ConsumerWidget {
               onChanged: (String value) {
                 ref.read(logFieldsNotifierProvider.notifier).note = value;
               },
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Note',
                 hintText: 'Enter a note',
-                border: InputBorder.none,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: colorScheme.primary,
+                  ),
+                ),
               ),
             ),
-            const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
                 final ActivityLog log = ref.read(logFieldsNotifierProvider);
