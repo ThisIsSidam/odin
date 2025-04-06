@@ -7,7 +7,7 @@ import '../../../../core/exceptions/limitations.dart';
 import '../../../../core/extensions/list_ext.dart';
 import '../../../../core/providers/global_providers.dart';
 import '../../../../objectbox.g.dart';
-import '../../../activity_logs/presentation/providers/activity_logs_provider.dart';
+import '../../../activity_logs/presentation/providers/logs_crud_provider.dart';
 import '../../../settings/presentation/providers/settings_provider.dart';
 import '../../data/entities/live_activity_entity.dart';
 import '../../data/models/live_activity.dart';
@@ -65,7 +65,7 @@ class LiveActivityNotifier extends _$LiveActivityNotifier {
 
   /// Stops activity through an activity's live session's id
   void stopActivity(int id) {
-    ref.read(activityLogsNotifierProvider(null, null).notifier).addActivityLog(
+    ref.read(logsCrudNotifierProvider.notifier).addActivityLog(
           state.firstWhere((LiveActivity e) => e.id == id).toEntity,
         );
     final bool removed = _box.remove(id);
