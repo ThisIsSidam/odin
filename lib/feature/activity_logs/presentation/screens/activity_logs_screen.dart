@@ -84,12 +84,11 @@ class ActivityLogTile extends ConsumerWidget {
             ),
       ),
       onLongPress: () {
-        ref.read(logFieldsNotifierProvider.notifier).updateLogState =
-            log.toEntity;
+        ref.read(logFieldsNotifierProvider.notifier).updateLogState = log;
         Navigator.push(
           context,
           MaterialPageRoute<void>(
-            builder: (BuildContext context) => LogScreen(log: log),
+            builder: (BuildContext context) => const LogScreen(),
           ),
         );
       },

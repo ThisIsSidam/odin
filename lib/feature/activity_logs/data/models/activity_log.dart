@@ -21,6 +21,13 @@ class ActivityLog {
         activity = live.activity!,
         note = live.note;
 
+  ActivityLog.isNull()
+      : id = 0,
+        startedAt = DateTime.now(),
+        stoppedAt = DateTime.now(),
+        activity = const Activity.notFound(),
+        note = null;
+
   int id;
   @Property(type: PropertyType.date)
   DateTime startedAt;
@@ -38,5 +45,21 @@ class ActivityLog {
       stoppedAt: stoppedAt,
       note: note,
     )..activity.target = activity.toEntity;
+  }
+
+  ActivityLog copyWith({
+    int? id,
+    DateTime? startedAt,
+    DateTime? stoppedAt,
+    Activity? activity,
+    String? note,
+  }) {
+    return ActivityLog(
+      id: id ?? this.id,
+      startedAt: startedAt ?? this.startedAt,
+      stoppedAt: stoppedAt ?? this.stoppedAt,
+      activity: activity ?? this.activity,
+      note: note ?? this.note,
+    );
   }
 }

@@ -3,17 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../shared/reactive_form_widgets/proxy_text_field.dart';
 import '../../../../shared/reactive_form_widgets/proxy_time_field.dart';
-import '../../data/entities/activity_log_entity.dart';
+import '../../../home/presentation/widgets/activity_icon_widget.dart';
 import '../../data/models/activity_log.dart';
 import '../providers/log_fields_provider.dart';
+import '../providers/logs_crud_provider.dart';
 
 class LogScreen extends ConsumerWidget {
-  const LogScreen({required this.log, super.key});
-  final ActivityLog log;
+  const LogScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ActivityLogEntity log = ref.watch(logFieldsNotifierProvider);
+    final ActivityLog log = ref.watch(logFieldsNotifierProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Log Details'),
@@ -24,6 +24,15 @@ class LogScreen extends ConsumerWidget {
           spacing: 12,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            ExpansionTile(
+              leading: ActivityIconWidget(
+                icon: log.activity.icon,
+                backgroundColor: log.activity.color,
+              ),
+              title: Text(
+                log.activity.name,
+              ),
+            ),
             ProxyTimeField(
               dt: log.startedAt,
               onChanged: (DateTime newDt) {
@@ -59,7 +68,13 @@ class LogScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                final ActivityLog log = ref.read(logFieldsNotifierProvider);
+                ref
+                    .read(logsCrudNotifierProvider.notifier)
+                    .updateActivityLog(log.toEntity);
+                Navigator.of(context).pop();
+              },
               child: const Text('Save Changes'),
             ),
           ],

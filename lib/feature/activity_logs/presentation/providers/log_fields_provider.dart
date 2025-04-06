@@ -1,18 +1,15 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/data/models/activity.dart';
-import '../../data/entities/activity_log_entity.dart';
+import '../../data/models/activity_log.dart';
 
 part 'generated/log_fields_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class LogFieldsNotifier extends _$LogFieldsNotifier {
   @override
-  ActivityLogEntity build() {
-    return ActivityLogEntity(
-      startedAt: DateTime.now(),
-      stoppedAt: DateTime.now(),
-    );
+  ActivityLog build() {
+    return ActivityLog.isNull();
   }
 
   set id(int value) {
@@ -32,15 +29,12 @@ class LogFieldsNotifier extends _$LogFieldsNotifier {
   }
 
   set activity(Activity value) {
-    state = state.copyWith(activity: value.toEntity);
+    state = state.copyWith(activity: value);
   }
 
-  set updateLogState(ActivityLogEntity log) {
+  set updateLogState(ActivityLog log) {
     state = log;
   }
 
-  void clearState() => state = ActivityLogEntity(
-        startedAt: DateTime.now(),
-        stoppedAt: DateTime.now(),
-      );
+  void clearState() => state = ActivityLog.isNull();
 }
