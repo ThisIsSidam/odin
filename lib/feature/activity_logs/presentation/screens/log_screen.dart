@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../shared/reactive_form_widgets/proxy_text_field.dart';
-import '../../../../shared/reactive_form_widgets/proxy_time_field.dart';
 import '../../data/models/activity_log.dart';
 import '../providers/log_fields_provider.dart';
 import '../providers/logs_crud_provider.dart';
 import '../widgets/activity_field.dart';
+import '../widgets/log_time_field.dart';
 
 class LogScreen extends ConsumerWidget {
   const LogScreen({super.key});
@@ -25,27 +25,19 @@ class LogScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             const ActivityField(),
-            ProxyTimeField(
+            LogTimeField(
               dt: log.startedAt,
+              label: 'Started At',
               onChanged: (DateTime newDt) {
                 ref.read(logFieldsNotifierProvider.notifier).startedAt = newDt;
               },
-              decoration: const InputDecoration(
-                labelText: 'Started At',
-                hintText: 'Select start time',
-                border: InputBorder.none,
-              ),
             ),
-            ProxyTimeField(
+            LogTimeField(
               dt: log.stoppedAt,
+              label: 'Stoppped At',
               onChanged: (DateTime newDt) {
                 ref.read(logFieldsNotifierProvider.notifier).stoppedAt = newDt;
               },
-              decoration: const InputDecoration(
-                labelText: 'Stopped At',
-                hintText: 'Select stop time',
-                border: InputBorder.none,
-              ),
             ),
             ProxyTextField(
               value: log.note,
