@@ -38,4 +38,25 @@ class ActivityLogEntity {
       note: note,
     );
   }
+
+  ActivityLogEntity copyWith({
+    int? id,
+    DateTime? startedAt,
+    DateTime? stoppedAt,
+    ActivityEntity? activity,
+    String? note,
+  }) {
+    final ActivityLogEntity entity = ActivityLogEntity(
+      id: id ?? this.id,
+      startedAt: startedAt ?? this.startedAt,
+      stoppedAt: stoppedAt ?? this.stoppedAt,
+      note: note ?? this.note,
+    );
+    if (activity != null) {
+      entity.activity.target = activity;
+    } else {
+      entity.activity.target = this.activity.target;
+    }
+    return entity;
+  }
 }

@@ -95,6 +95,10 @@ class ActivityLogsNotifier extends _$ActivityLogsNotifier {
     _box.put(log);
   }
 
+  void updateActivityLog(ActivityLogEntity log) {
+    _box.put(log);
+  }
+
   Map<Activity, (Duration, double)> getStats() {
     final Map<Activity, Duration> durations = <Activity, Duration>{};
     Duration totalDuration = Duration.zero;

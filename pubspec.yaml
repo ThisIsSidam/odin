@@ -15,6 +15,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_colorpicker: ^1.1.0
+  flutter_datetime_picker_plus: ^2.2.0
   flutter_hooks: ^0.20.5
   flutter_icons_catalog:
     git: https://github.com/ThisIsSidam/flutter_icons_catalog/

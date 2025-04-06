@@ -8,6 +8,8 @@ import '../../../../shared/widgets/app_elements/not_found_widget.dart';
 import '../../../home/presentation/widgets/activity_icon_widget.dart';
 import '../../data/models/activity_log.dart';
 import '../providers/activity_logs_provider.dart';
+import '../providers/log_fields_provider.dart';
+import 'log_screen.dart';
 
 class ActivityLogsScreen extends HookConsumerWidget {
   const ActivityLogsScreen({super.key});
@@ -81,6 +83,16 @@ class ActivityLogTile extends ConsumerWidget {
               abbreviated: true,
             ),
       ),
+      onLongPress: () {
+        ref.read(logFieldsNotifierProvider.notifier).updateLogState =
+            log.toEntity;
+        Navigator.push(
+          context,
+          MaterialPageRoute<void>(
+            builder: (BuildContext context) => LogScreen(log: log),
+          ),
+        );
+      },
     );
   }
 }
