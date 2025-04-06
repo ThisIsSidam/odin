@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../shared/reactive_form_widgets/proxy_text_field.dart';
 import '../../../../shared/reactive_form_widgets/proxy_time_field.dart';
-import '../../../home/presentation/widgets/activity_icon_widget.dart';
 import '../../data/models/activity_log.dart';
 import '../providers/log_fields_provider.dart';
 import '../providers/logs_crud_provider.dart';
+import '../widgets/activity_field.dart';
 
 class LogScreen extends ConsumerWidget {
   const LogScreen({super.key});
@@ -24,15 +24,7 @@ class LogScreen extends ConsumerWidget {
           spacing: 12,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            ExpansionTile(
-              leading: ActivityIconWidget(
-                icon: log.activity.icon,
-                backgroundColor: log.activity.color,
-              ),
-              title: Text(
-                log.activity.name,
-              ),
-            ),
+            const ActivityField(),
             ProxyTimeField(
               dt: log.startedAt,
               onChanged: (DateTime newDt) {
