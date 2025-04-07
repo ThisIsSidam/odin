@@ -50,6 +50,10 @@ class ActivityLogRepository {
   void update(ActivityLogEntity log) {
     _box.put(log);
   }
+
+  void delete(ActivityLogEntity log) {
+    _box.remove(log.id);
+  }
 }
 
 @riverpod

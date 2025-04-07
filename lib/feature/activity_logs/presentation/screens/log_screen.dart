@@ -18,6 +18,17 @@ class LogScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Log Details'),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () {
+              ref
+                  .read(logsCrudNotifierProvider.notifier)
+                  .deleteActivityLog(log);
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

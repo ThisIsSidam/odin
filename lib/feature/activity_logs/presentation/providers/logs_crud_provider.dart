@@ -2,6 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../home/data/entities/live_activity_entity.dart';
 import '../../data/entities/activity_log_entity.dart';
+import '../../data/models/activity_log.dart';
 import '../../data/repositories/activity_logs_repo.dart';
 
 part 'generated/logs_crud_provider.g.dart';
@@ -23,5 +24,9 @@ class LogsCrudNotifier extends _$LogsCrudNotifier {
 
   void updateActivityLog(ActivityLogEntity log) {
     _repo.update(log);
+  }
+
+  void deleteActivityLog(ActivityLog log) {
+    _repo.delete(log.toEntity);
   }
 }
