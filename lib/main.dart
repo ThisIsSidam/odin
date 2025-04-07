@@ -8,9 +8,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toastification/toastification.dart';
 
+import 'app/theme/color_schemes.dart';
+import 'app/theme/theme.dart';
 import 'core/providers/global_providers.dart';
-import 'core/theme/color_schemes.dart';
-import 'core/theme/theme.dart';
 import 'feature/home/presentation/screens/dashboard_screen.dart';
 import 'feature/settings/presentation/providers/settings_provider.dart';
 import 'objectbox.g.dart';
