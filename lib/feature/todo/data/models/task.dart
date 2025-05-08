@@ -3,7 +3,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '../../../core/data/models/activity.dart';
+import '../../../../core/data/models/activity.dart';
+import '../entity/task_entity.dart';
 
 class Task {
   final String id;
@@ -19,6 +20,11 @@ class Task {
     this.isCompleted = false,
   }) : id = DateTime.now().millisecondsSinceEpoch.toString() +
             Random().nextInt(1000).toString();
+
+  TaskEntity get toEntity => TaskEntity(
+        title: title,
+        scheduleTime: scheduleTime,
+      )..activity.target = activity.toEntity;
 }
 
 // Mock data for tasks

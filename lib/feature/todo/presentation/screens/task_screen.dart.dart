@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/data/models/activity.dart';
 import '../../../home/presentation/providers/activity_provider.dart';
 import '../../../home/presentation/screens/home_screen.dart';
-import '../../data/task.dart';
+import '../../data/models/task.dart';
 
 // Create Task Screen
 class TaskScreen extends ConsumerStatefulWidget {

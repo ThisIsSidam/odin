@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../data/task.dart';
+import '../../data/models/task.dart';
 import '../widgets/task_card.dart';
 import 'task_screen.dart.dart';
 

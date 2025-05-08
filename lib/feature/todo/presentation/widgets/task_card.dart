@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../home/presentation/screens/home_screen.dart';
-import '../../data/task.dart';
+import '../../data/models/task.dart';
 
 class TaskCard extends StatelessWidget {
   final Task task;

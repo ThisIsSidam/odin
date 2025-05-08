@@ -120,10 +120,42 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "15:7006958078553376912",
+      "lastPropertyId": "4:4410324322026505118",
+      "name": "TaskEntity",
+      "properties": [
+        {
+          "id": "1:4655151009668281553",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4035407894122981401",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "3:4499841686786421746",
+          "name": "activityId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "11:5809067358496635901",
+          "relationTarget": "ActivityEntity"
+        },
+        {
+          "id": "4:4410324322026505118",
+          "name": "scheduleTime",
+          "type": 10
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "14:6605700059052139109",
-  "lastIndexId": "10:6796361449748424826",
+  "lastEntityId": "15:7006958078553376912",
+  "lastIndexId": "11:5809067358496635901",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
