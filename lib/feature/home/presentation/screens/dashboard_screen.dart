@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../activity_logs/presentation/screens/activity_logs_screen.dart';
 import '../../../settings/presentation/screens/settings.dart';
 import '../../../stats/presentation/screens/stat_screen.dart';
+import '../../../todo/presentation/screens/tasks_list_screen.dart';
 import 'home_screen.dart';
 
 @immutable
@@ -13,10 +14,11 @@ class DashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return const DefaultTabController(
-      length: 4,
+      length: 5,
       child: Scaffold(
         body: TabBarView(
           children: <Widget>[
+            TaskListScreen(),
             HomeScreen(),
             ActivityLogsScreen(),
             StatScreen(),
@@ -25,6 +27,10 @@ class DashboardScreen extends ConsumerWidget {
         ),
         bottomNavigationBar: TabBar(
           tabs: <Tab>[
+            Tab(
+              icon: Icon(Icons.checklist),
+              text: 'Tasks',
+            ),
             Tab(
               icon: Icon(Icons.home),
               text: 'Home',

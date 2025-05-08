@@ -13,6 +13,7 @@ ThemeData getLightTheme(ColorScheme colorScheme) => ThemeData(
           borderRadius: const BorderRadius.all(Radius.circular(8)),
         ),
       ),
+      cardColor: colorScheme.inverseSurface.withAlpha(25),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: colorScheme.primary,
@@ -34,6 +35,7 @@ ThemeData getDarkTheme(ColorScheme colorScheme) => ThemeData(
       bottomSheetTheme: const BottomSheetThemeData(
         modalBarrierColor: Colors.white38,
       ),
+      cardColor: colorScheme.inverseSurface.withAlpha(25),
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
           borderSide: BorderSide(color: colorScheme.outline),
